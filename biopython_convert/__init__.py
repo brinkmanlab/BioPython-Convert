@@ -5,11 +5,12 @@ Convert between any formats that Biopython supports or gffutils.
 Provides a means of querying/filtering documents using JMESPath query language.
 """
 from Bio import SeqIO
+from .__version import __version__, __versionstr__
 import itertools
 import getopt
 import gffutils
 from gffutils import biopython_integration
-import JMESPathGen
+from . import JMESPathGen
 import sys
 
 usage = "Use: biopython.convert [-s] [-v] [-i] [-q JMESPath] input_file input_type output_file output_type\n" \
@@ -21,7 +22,8 @@ usage = "Use: biopython.convert [-s] [-v] [-i] [-q JMESPath] input_file input_ty
 gff_types = ["gff", "gff3"]
 stat_annotations = ['molecule_type', 'topology', 'data_file_division', 'date', 'accessions', 'sequence_version', 'gi', 'keywords', 'source', 'organism']
 
-def append_filename(path, s):
+
+def append_filename(path: str, s: str):
     """
     Append a string to a file name before the extension
     :param path: file path
@@ -34,7 +36,13 @@ def append_filename(path, s):
     else:
         return path + s
 
-def get_args(sysargs):
+
+def get_args(sysargs: list):
+    """
+    Parse command line arguments
+    :param sysargs: list of command line arguments (sys.argv[1:])
+    :return: (input_path, input_type, output_path, output_type, jmespath, split, stats)
+    """
     split = False
     jpath = None
     stats = False
@@ -43,9 +51,7 @@ def get_args(sysargs):
         opts, args = getopt.gnu_getopt(sysargs, 'vsiq:')
         for opt, val in opts:
             if opt == '-v':
-                import __version
-
-                print(__version.__versionstr__)
+                print(__versionstr__)
                 exit(0)
             elif opt == '-s':
                 split = True
@@ -70,10 +76,24 @@ def get_args(sysargs):
 
     return input_path, input_type, output_path, output_type, jpath, split, stats
 
-def convert(input, input_type, output_path, output_type, jpath, split, stats):
+
+def convert(input_handle, input_type: str, output_path: str, output_type: str, jpath: str, split: bool, stats: bool):
+    """
+    Convert the input data to a file of specified format
+    :param input_handle: File handle to read data from
+    :param input_type: one of abi,abi-trim,ace,cif-atom,cif-seqres,clustal,embl,fasta,fasta-2line,fastq-sanger,fastq,
+        fastq-solexa,fastq-illumina,genbank,gb,ig,imgt,nexus,pdb-seqres,pdb-atom,phd,phylip,pir,seqxml,sff,sff-trim,
+        stockholm,swiss,tab,qual,uniprot-xml,gff3
+    :param output_path: Path to output to
+    :param output_type: Format to output as
+    :param jpath: JMESPath selecting records to keep. The root is the list of records. The path must return a list of records.
+    :param split: True to split into separate files, False otherwise
+    :param stats: True to output record info to stdout, False otherwise
+    :return: None
+    """
     if input_type in gff_types:
         # If input is GFF load with gffutils library
-        db = gffutils.create_db(input, ":memory:", merge_strategy="create_unique")
+        db = gffutils.create_db(input_handle, ":memory:", merge_strategy="create_unique")
         # Wrap features in generator that converts to BioPython SeqRecords
         input_records = map(
             lambda x: SeqIO.SeqRecord("", features=list(x)),
@@ -83,7 +103,7 @@ def convert(input, input_type, output_path, output_type, jpath, split, stats):
             )
         )
     else:
-        input_records = SeqIO.parse(input, input_type)
+        input_records = SeqIO.parse(input_handle, input_type)
 
     # Wrap input in JMESPath selector if provided
     if jpath:
@@ -102,14 +122,14 @@ def convert(input, input_type, output_path, output_type, jpath, split, stats):
 
     output = None
 
-    for i, record in enumerate(input_records):  # type: (Integer, SeqIO.SeqRecord)
+    for i, record in enumerate(input_records):  # type: int, SeqIO.SeqRecord
         # TODO allow objects other than SeqRecord, transform to SeqRecord or handle special output (like if output format == txt|json, pretty print object)
-        if isinstance(input_records, dict):
+        if isinstance(record, dict):
             # Support generating new records in JMESPath
             record = SeqIO.SeqRecord(**record)
 
         if stats:
-            attributes={'Name': [record.name]}
+            attributes = {'Name': [record.name]}
             for k, v in record.annotations.items():
                 if k in stat_annotations:
                     if isinstance(v, list):
@@ -136,9 +156,9 @@ def convert(input, input_type, output_path, output_type, jpath, split, stats):
             output.close()
             output = None
 
+
 if __name__ == '__main__':
-    input_path, input_type, output_path, output_type, jpath, split, stats = get_args(sys.argv[1:])
+    in_path, *remaining_args = get_args(sys.argv[1:])
 
-    with open(input_path, "r") as input:
-        convert(input, input_type, output_path, output_type, jpath, split, stats)
-
+    with open(in_path, "r") as handle:
+        convert(handle, *remaining_args)
