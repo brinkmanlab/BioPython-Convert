@@ -5,9 +5,10 @@ with open('README.rst') as readme:
     setup(
         name='biopython.convert',
         version=__versionstr__,
+        python_requires='>=3.7',
         packages=find_packages(),
         long_description=readme.read(),
-        install_requires=['biopython', 'gffutils', 'jmespath'],
+        install_requires=['biopython>=1.73', 'gffutils>=0.9', 'jmespath>=0.9.4'],
         scripts=['bin/biopython.convert'],
         url='https://github.com/brinkmanlab/biopython-convert',
         license='MIT Amended',
