@@ -12,6 +12,7 @@ import gffutils
 from gffutils import biopython_integration
 from . import JMESPathGen
 import sys
+import pathlib
 
 usage = "Use: biopython.convert [-s] [-v] [-i] [-q JMESPath] input_file input_type output_file output_type\n" \
         "\t-s Split records into seperate files\n" \
@@ -23,20 +24,6 @@ gff_types = ["gff", "gff3"]
 stat_annotations = ['molecule_type', 'topology', 'data_file_division', 'date', 'accessions', 'sequence_version', 'gi', 'keywords', 'source', 'organism']
 
 
-def append_filename(path: str, s: str):
-    """
-    Append a string to a file name before the extension
-    :param path: file path
-    :param s: string to append
-    :return: appended file name
-    """
-    seg = path.rsplit(".", 1)
-    if len(seg) > 1:
-        return seg[0] + s + "." + seg[1]
-    else:
-        return path + s
-
-
 def get_args(sysargs: list):
     """
     Parse command line arguments
@@ -45,7 +32,7 @@ def get_args(sysargs: list):
     """
     split = False
     jpath = None
-    stats = False
+    stats = None
     # Parse arguments
     try:
         opts, args = getopt.gnu_getopt(sysargs, 'vsiq:')
@@ -58,7 +45,7 @@ def get_args(sysargs: list):
             elif opt == '-q':
                 jpath = val
             elif opt == '-i':
-                stats = True
+                stats = sys.stdout
 
     except getopt.GetoptError as err:
         print("Argument error(" + str(err.opt) + "): " + err.msg, file=sys.stderr)
@@ -69,15 +56,15 @@ def get_args(sysargs: list):
         print(usage, file=sys.stderr)
         exit(1)
 
-    input_path = args[0]
+    input_path = pathlib.Path(args[0])
     input_type = args[1]
-    output_path = args[2]
+    output_path = pathlib.Path(args[2])
     output_type = args[3]
 
     return input_path, input_type, output_path, output_type, jpath, split, stats
 
 
-def convert(input_handle, input_type: str, output_path: str, output_type: str, jpath: str, split: bool, stats: bool):
+def convert(input_handle, input_type: str, output_path: pathlib.Path, output_type: str, jpath: str = '', split: bool = False, stats: 'io.IOBase or None' = None):
     """
     Convert the input data to a file of specified format
     :param input_handle: File handle to read data from
@@ -88,7 +75,7 @@ def convert(input_handle, input_type: str, output_path: str, output_type: str, j
     :param output_type: Format to output as
     :param jpath: JMESPath selecting records to keep. The root is the list of records. The path must return a list of records.
     :param split: True to split into separate files, False otherwise
-    :param stats: True to output record info to stdout, False otherwise
+    :param stats: Handle to output record info to (sys.stdout), None otherwise
     :return: None
     """
     if input_type in gff_types:
@@ -138,11 +125,11 @@ def convert(input_handle, input_type: str, output_path: str, output_type: str, j
                         v = [str(v)]
                     attributes[k] = v
             attributes['desc'] = [record.description]
-            print(gffutils.Feature(record.id, "biopython-convert", "sequence", start=1, end=len(record), attributes=attributes))
+            print(gffutils.Feature(record.id, "biopython-convert", "sequence", start=1, end=len(record), attributes=attributes), file=stats)
 
         if not output:
             # Open output file with file name suffix if splitting
-            output = open(append_filename(output_path, "." + str(i)) if split else output_path, "w")
+            output = (output_path.with_suffix(f".${i}${output_path.suffix}") if split else output_path).open("w")
 
         if output_type in gff_types:
             # If output type is GFF, use gffutils library
@@ -156,9 +143,12 @@ def convert(input_handle, input_type: str, output_path: str, output_type: str, j
             output.close()
             output = None
 
+    if output:
+        output.close()
+
 
 if __name__ == '__main__':
     in_path, *remaining_args = get_args(sys.argv[1:])
 
-    with open(in_path, "r") as handle:
+    with in_path.open("r") as handle:
         convert(handle, *remaining_args)
