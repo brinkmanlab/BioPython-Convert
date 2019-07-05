@@ -15,5 +15,14 @@ with open('README.rst') as readme:
         author='Nolan Woods',
         author_email='nolan_w@sfu.ca',
         description='Interconvert various file formats supported by biopython. Supports querying records with JMESPath.',
-        include_package_data=True
+        include_package_data=True,
+        test_suite="tests",
+        classifiers=[
+            "Environment :: Console",
+            "Intended Audience :: Science/Research",
+            "License :: OSI Approved :: MIT License",
+            "Operating System :: POSIX",
+            "Programming Language :: Python :: 3.7",
+            "Topic :: Scientific/Engineering :: Bio-Informatics",
+        ]
     )
