@@ -1,18 +1,19 @@
-#!/usr/bin/env python
 """
 Biopython Convert
 Convert between any formats that Biopython supports or gffutils.
 Provides a means of querying/filtering documents using JMESPath query language.
 """
-from Bio import SeqIO
-from .__version import __version__, __versionstr__
-import itertools
-import getopt
-import gffutils
-from gffutils import biopython_integration
-from . import JMESPathGen
 import sys
 import pathlib
+import itertools
+import getopt
+
+from Bio import SeqIO
+import gffutils
+from gffutils import biopython_integration
+
+from .__version import __version__, __versionstr__
+from . import JMESPathGen
 
 gff_types = ['gff', 'gff3']
 extended_types = ['txt', 'json', 'yaml', 'yml']
@@ -23,12 +24,13 @@ SeqIO_types = ['abi', 'abi-trim', 'ace', 'cif-atom', 'cif-seqres', 'clustal', 'e
 stat_annotations = ['molecule_type', 'topology', 'data_file_division', 'date', 'accessions', 'sequence_version', 'gi',
                     'keywords', 'source', 'organism']
 
-usage = "Use: biopython.convert [-s] [-v] [-i] [-q JMESPath] input_file input_type output_file output_type\n" \
-        "\t-s Split records into seperate files\n" \
-        "\t-q JMESPath to select records. Must return list of SeqIO records. Root is list of input SeqIO records.\n" \
-        "\t-i Print out details of records during conversion\n" \
-        "\t-v Print version and exit\n" \
-        "\nValid types: " + ', '.join(SeqIO_types + gff_types) + "\n"
+usage = """\
+Use: biopython.convert [-s] [-v] [-i] [-q JMESPath] input_file input_type output_file output_type
+\t-s Split records into seperate files
+\t-q JMESPath to select records. Must return list of SeqIO records. Root is list of input SeqIO records.
+\t-i Print out details of records during conversion
+\t-v Print version and exit
+""" + "\nValid types: " + ', '.join(SeqIO_types + gff_types) + "\n"
 
 def get_args(sysargs: list):
     """
@@ -208,8 +210,4 @@ def convert(input_path, input_type, output_path, output_type, split=None, jpath=
                     output_handle,
                     output_type
                 )
-
-
-if __name__ == '__main__':
-    convert(*get_args(sys.argv[1:]))
 
