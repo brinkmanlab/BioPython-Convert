@@ -14,21 +14,27 @@ from . import JMESPathGen
 import sys
 import pathlib
 
+gff_types = ['gff', 'gff3']
+extended_types = ['txt', 'json', 'yaml', 'yml']
+SeqIO_types = ['abi', 'abi-trim', 'ace', 'cif-atom', 'cif-seqres', 'clustal', 'embl', 'fasta', 'fasta-2line',
+               'fastq-sanger', 'fastq', 'fastq-solexa', 'fastq-illumina', 'genbank', 'gb', 'ig', 'imgt', 'nexus',
+               'pdb-seqres', 'pdb-atom', 'phd', 'phylip', 'pir', 'seqxml', 'sff', 'sff-trim', 'stockholm', 'swiss',
+               'tab', 'qual', 'uniprot-xml']
+stat_annotations = ['molecule_type', 'topology', 'data_file_division', 'date', 'accessions', 'sequence_version', 'gi',
+                    'keywords', 'source', 'organism']
+
 usage = "Use: biopython.convert [-s] [-v] [-i] [-q JMESPath] input_file input_type output_file output_type\n" \
         "\t-s Split records into seperate files\n" \
         "\t-q JMESPath to select records. Must return list of SeqIO records. Root is list of input SeqIO records.\n" \
         "\t-i Print out details of records during conversion\n" \
-        "\t-v Print version and exit\n"
-
-gff_types = ["gff", "gff3"]
-stat_annotations = ['molecule_type', 'topology', 'data_file_division', 'date', 'accessions', 'sequence_version', 'gi', 'keywords', 'source', 'organism']
-
+        "\t-v Print version and exit\n" \
+        "\nValid types: " + ', '.join(SeqIO_types + gff_types) + "\n"
 
 def get_args(sysargs: list):
     """
     Parse command line arguments
     :param sysargs: list of command line arguments (sys.argv[1:])
-    :return: (input_path, input_type, output_path, output_type, jmespath, split, stats)
+    :return: (input_path, input_type, output_path, output_type, split, jmespath, stats)
     """
     split = False
     jpath = None
@@ -61,22 +67,34 @@ def get_args(sysargs: list):
     output_path = pathlib.Path(args[2])
     output_type = args[3]
 
-    return input_path, input_type, output_path, output_type, jpath, split, stats
+    return input_path, input_type, output_path, output_type, split, jpath, stats
 
-
-def convert(input_handle, input_type: str, output_path: pathlib.Path, output_type: str, jpath: str = '', split: bool = False, stats: 'io.IOBase or None' = None):
+def to_stats(record: SeqIO.SeqRecord) -> str:
     """
-    Convert the input data to a file of specified format
+    Build GFF record representing summary of SeqRecord
+    :param record: SeqIO.SeqRecord to represent
+    :return: string containing GFF record
+    """
+    attributes = {'Name': [record.name]}
+    for k, v in record.annotations.items():
+        if k in stat_annotations:
+            if isinstance(v, list):
+                v = [str(a) for a in v]
+            else:
+                v = [str(v)]
+            attributes[k] = v
+    attributes['desc'] = [record.description]
+    return str(gffutils.Feature(record.id, "biopython-convert", "sequence", start=1, end=len(record), attributes=attributes))
+
+def get_records(input_handle, input_type: str, jpath: str = ''):
+    """
+    Read in records and apply optional jmespath
     :param input_handle: File handle to read data from
     :param input_type: one of abi,abi-trim,ace,cif-atom,cif-seqres,clustal,embl,fasta,fasta-2line,fastq-sanger,fastq,
         fastq-solexa,fastq-illumina,genbank,gb,ig,imgt,nexus,pdb-seqres,pdb-atom,phd,phylip,pir,seqxml,sff,sff-trim,
         stockholm,swiss,tab,qual,uniprot-xml,gff3
-    :param output_path: Path to output to
-    :param output_type: Format to output as
     :param jpath: JMESPath selecting records to keep. The root is the list of records. The path must return a list of records.
-    :param split: True to split into separate files, False otherwise
-    :param stats: Handle to output record info to (sys.stdout), None otherwise
-    :return: None
+    :return: iterable of resulting records
     """
     if input_type in gff_types:
         # If input is GFF load with gffutils library
@@ -104,51 +122,94 @@ def convert(input_handle, input_type: str, output_path: pathlib.Path, output_typ
         # Support returning single record from JMESPath
         input_records = (input_records,)
 
+    return input_records
+
+
+def _generate_suffixes(path: pathlib.Path) -> pathlib.Path:
+    """
+    Helper to generate a new file path from a base path on each iteration
+    :param path: base path to add suffix to
+    :return: new path
+    """
+    i = 0
+    while True:
+        # Open output file with file name suffix if splitting
+        yield path.with_suffix(f".${i}${path.suffix}")
+        i += 1
+
+
+def gff_writer(handle, records: [SeqIO.SeqRecord], output_type: str):
+    """
+    Convert SeqRecord to gffutils GFF3 record and output to handle
+    :param handle: file handle to write to
+    :param records: iterable of SeqRecord instances
+    :param output_type: output format, ignored
+    :return: None
+    """
+    for record in records:
+        # TODO extend gffutils SeqFeature support
+        for feature in record.features:
+            print(biopython_integration.from_seqfeature(feature), file=handle)
+
+
+def _to_SeqRecord(record):
+    """
+    Helper to convert all output records to SeqRecords
+    :param record: dict or SeqRecord
+    :return: SeqRecord
+    """
+    if isinstance(record, dict):
+        # Support generating new records in JMESPath
+        record = SeqIO.SeqRecord(**record)
+    return record
+
+
+def _print_stats(record, stats):
+    """
+    Helper to print stats of record
+    :param record: SeqRecord to print stats of
+    :param stats: IO handle or None
+    :return: record, unaltered
+    """
     if stats:
-        print("##gff-version 3")
+        print(to_stats(record), file=stats)
+    return record
 
-    output = None
 
-    for i, record in enumerate(input_records):  # type: int, SeqIO.SeqRecord
-        # TODO allow objects other than SeqRecord, transform to SeqRecord or handle special output (like if output format == txt|json, pretty print object)
-        if isinstance(record, dict):
-            # Support generating new records in JMESPath
-            record = SeqIO.SeqRecord(**record)
+def convert(input_path, input_type, output_path, output_type, split=None, jpath='', stats=None):
+    with input_path.open("r") as handle:
+        if output_type == 'txt':
+            raise NotImplemented
+        elif output_type == 'json':
+            raise NotImplemented
+        elif output_type in ('yml', 'yaml'):
+            raise NotImplemented
+        elif output_type in gff_types:
+            writer = gff_writer
+        else:
+            writer = SeqIO.write
 
         if stats:
-            attributes = {'Name': [record.name]}
-            for k, v in record.annotations.items():
-                if k in stat_annotations:
-                    if isinstance(v, list):
-                        v = [str(a) for a in v]
-                    else:
-                        v = [str(v)]
-                    attributes[k] = v
-            attributes['desc'] = [record.description]
-            print(gffutils.Feature(record.id, "biopython-convert", "sequence", start=1, end=len(record), attributes=attributes), file=stats)
+            print("##gff-version 3")
 
-        if not output:
-            # Open output file with file name suffix if splitting
-            output = (output_path.with_suffix(f".${i}${output_path.suffix}") if split else output_path).open("w")
-
-        if output_type in gff_types:
-            # If output type is GFF, use gffutils library
-            for feature in record.features:
-                print(biopython_integration.from_seqfeature(feature), file=output)
-        else:
-            SeqIO.write(record, output, output_type)
-
+        seq_records = map(_to_SeqRecord, get_records(handle, input_type, jpath))
         if split:
-            # If splitting, open next file
-            output.close()
-            output = None
-
-    if output:
-        output.close()
+            for record, path in zip(seq_records, _generate_suffixes(output_path)):
+                _print_stats(record, stats)
+                with path.open('w') as output_handle:
+                    writer((record,), output_handle, output_type)
+        else:
+            with output_path.open('w') as output_handle:
+                writer(
+                    map(
+                        lambda r: _print_stats(r, stats),
+                        seq_records
+                    ),
+                    output_handle,
+                    output_type
+                )
 
 
 if __name__ == '__main__':
-    in_path, *remaining_args = get_args(sys.argv[1:])
+    convert(*get_args(sys.argv[1:]))
 
-    with in_path.open("r") as handle:
-        convert(handle, *remaining_args)
