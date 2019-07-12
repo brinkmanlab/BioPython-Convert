@@ -7,7 +7,7 @@ from pathlib import Path
 from biopython_convert import convert
 
 class TestConvert(TestCase):
-    input_path = Path('../test-data/has_plasmids.gbff')
+    input_path = Path('test-data/has_plasmids.gbff')
     input_type = 'genbank'
     basic_hash = '2808187bb8e2231545e4d2d7a27dc802df4d1f7c0e953a8399300b2df6b0c737'
     convert_type = 'embl'

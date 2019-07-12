@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from setuptools import setup, find_packages
 from biopython_convert.__version import __versionstr__
 
