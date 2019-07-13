@@ -16,6 +16,12 @@ or::
 
     conda install biopython.convert
 
+or::
+
+    git clone https://github.com/brinkmanlab/BioPython-Convert.git
+    cd BioPython-Convert
+    ./setup.py install
+
 Use
 ---
 ::
