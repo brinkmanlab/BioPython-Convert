@@ -13,7 +13,7 @@ The above copyright notice and this permission notice shall be included in all c
 portions of the Software.
 
 Any publication resulting in the use of the Software or its code in whole or in part shall cite:
-
+    Nolan Woods, Fiona Brinkman; Brinkman Lab, SFU
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
