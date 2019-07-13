@@ -192,7 +192,7 @@ def convert(input_path, input_type, output_path, output_type, split=None, jpath=
             writer = SeqIO.write
 
         if stats:
-            print("##gff-version 3")
+            print("##gff-version 3", file=stats)
 
         seq_records = map(_to_SeqRecord, get_records(handle, input_type, jpath))
         if split:
