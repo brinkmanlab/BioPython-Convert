@@ -12,7 +12,7 @@ class TestConvert(TestCase):
     basic_hash = '2808187bb8e2231545e4d2d7a27dc802df4d1f7c0e953a8399300b2df6b0c737'
     convert_type = 'embl'
     convert_hash = '5598cb679f5f6c31349968ddde3646fe97296da42ee528ed3f46dec3f5490cbd'
-    info_hash = 'a611656c5a7e7f719c3d64f6b348b67c1abcb8ed56fa82f51fc90cbe2125e5f0'
+    info_hash = '91c19f7a3e3ed3f8e55a0d76289a881208cef78f4124edb0c3335e581ea6e48c'
     filter = '[?!(features[?type==`source`].qualifiers.plasmid)]'
     record_hash = ('8d02b2087c4cea42da7c5f0a69b7a40d544d953c1a9d611b97bd116cc1f8cd7f',
                    'e37ecc4288ae8b2c3bea25484326a69ced9679fa791162ed593064fdf535944d',

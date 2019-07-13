@@ -1,8 +1,9 @@
 ==================
 BioPython-Convert
 ==================
+
 Interconvert various file formats supported by BioPython.
----------------------------------------------------------
+
 Supports querying records with JMESPath.
 
 Installation
@@ -50,6 +51,9 @@ Examples:
         [0]
 
 
+See CONTRIBUTING.rst_ for information on contributing to this repo.
+
+.. _CONTRIBUTING.rst: CONTRIBUTING.rst
 .. _JMESPath: http://jmespath.org/
 .. _SeqRecord: https://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html
 .. _constructor parameters: https://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html#__init__

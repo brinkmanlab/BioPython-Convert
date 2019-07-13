@@ -194,3 +194,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+.bash_history
