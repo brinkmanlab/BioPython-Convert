@@ -12,7 +12,6 @@ from Bio import SeqIO
 import gffutils
 from gffutils import biopython_integration
 
-from .__version import __version__, __versionstr__
 from . import JMESPathGen
 
 gff_types = ['gff', 'gff3']
@@ -46,7 +45,8 @@ def get_args(sysargs: list):
         opts, args = getopt.gnu_getopt(sysargs, 'vsiq:')
         for opt, val in opts:
             if opt == '-v':
-                print(__versionstr__)
+                import __version
+                print(__version.__version__)
                 exit(0)
             elif opt == '-s':
                 split = True

@@ -1,6 +1,6 @@
-__version__ = [1, 0, 0]
-
-__versionstr__ = '.'.join([str(i) for i in __version__])
+from pbr.version import VersionInfo
+_v = VersionInfo('mock').semantic_version()
+__version__ = _v.release_string()
 
 if __name__ == '__main__':
-    print(__versionstr__)
+    print(__version__)
