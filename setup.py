@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
-from biopython_convert.__version import __versionstr__
+
+import re
+with open('biopython_convert/__version.py') as version_file:
+    __versionstr__ = '.'.join(re.search(r"__version__ = \[(\d+), (\d+), (\d+)\]", version_file.read(), re.M).group()[1:])
 
 with open('README.rst') as readme:
     setup(
