@@ -14,6 +14,7 @@ portions of the Software.
 
 Any publication resulting in the use of the Software or its code in whole or in part shall cite:
     Nolan Woods, Fiona Brinkman; Brinkman Lab, SFU. "Interconverting file formats supported by Biopython" doi: 10.5281/zenodo.3364783
+    
     .. image:: https://zenodo.org/badge/195302632.svg
         :target: https://zenodo.org/badge/latestdoi/195302632
 
