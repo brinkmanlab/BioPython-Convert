@@ -1,3 +1,6 @@
+.. image:: https://zenodo.org/badge/195302632.svg
+    :target: https://zenodo.org/badge/latestdoi/195302632
+
 ==================
 BioPython-Convert
 ==================
