@@ -13,11 +13,11 @@ Installation
 ------------
 ::
 
-    pip install biopython.convert
+    pip install biopython-convert
 
 or::
 
-    conda install biopython.convert
+    conda install biopython-convert
 
 or::
 
