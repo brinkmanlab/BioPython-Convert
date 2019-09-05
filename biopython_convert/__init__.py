@@ -31,6 +31,7 @@ Use: biopython.convert [-s] [-v] [-i] [-q JMESPath] input_file input_type output
 \t-v Print version and exit
 """ + "\nValid types: " + ', '.join(SeqIO_types + gff_types) + "\n"
 
+
 def get_args(sysargs: list):
     """
     Parse command line arguments
@@ -45,7 +46,7 @@ def get_args(sysargs: list):
         opts, args = getopt.gnu_getopt(sysargs, 'vsiq:')
         for opt, val in opts:
             if opt == '-v':
-                import __version
+                from . import __version
                 print(__version.__version__)
                 exit(0)
             elif opt == '-s':
@@ -71,6 +72,7 @@ def get_args(sysargs: list):
 
     return input_path, input_type, output_path, output_type, split, jpath, stats
 
+
 def to_stats(record: SeqIO.SeqRecord) -> str:
     """
     Build GFF record representing summary of SeqRecord
@@ -87,6 +89,7 @@ def to_stats(record: SeqIO.SeqRecord) -> str:
             attributes[k] = v
     attributes['desc'] = [record.description]
     return str(gffutils.Feature(record.id, "biopython-convert", "sequence", start=1, end=len(record), attributes=attributes))
+
 
 def get_records(input_handle, input_type: str, jpath: str = ''):
     """
@@ -140,7 +143,7 @@ def _generate_suffixes(path: pathlib.Path) -> pathlib.Path:
         i += 1
 
 
-def gff_writer(handle, records: [SeqIO.SeqRecord], output_type: str):
+def gff_writer(records: [SeqIO.SeqRecord], handle, output_type: str):
     """
     Convert SeqRecord to gffutils GFF3 record and output to handle
     :param handle: file handle to write to
@@ -151,7 +154,10 @@ def gff_writer(handle, records: [SeqIO.SeqRecord], output_type: str):
     for record in records:
         # TODO extend gffutils SeqFeature support
         for feature in record.features:
-            print(biopython_integration.from_seqfeature(feature), file=handle)
+            feature = biopython_integration.from_seqfeature(feature)
+            feature.seqid = record.id
+            feature.source = 'biopython.convert'
+            print(feature, file=handle)
 
 
 def _to_SeqRecord(record):
