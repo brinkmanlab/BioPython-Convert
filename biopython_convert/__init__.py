@@ -82,6 +82,8 @@ def to_stats(record: SeqIO.SeqRecord) -> str:
     # 'if' statements can be removed after https://github.com/daler/gffutils/pull/144
     if record.name:
         attributes = {'Name': [record.name]}
+    else:
+        attributes = {}
     for k, v in record.annotations.items():
         if k in stat_annotations:
             if isinstance(v, list):
