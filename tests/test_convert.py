@@ -17,6 +17,7 @@ class TestConvert(TestCase):
     record_hash = ('8d02b2087c4cea42da7c5f0a69b7a40d544d953c1a9d611b97bd116cc1f8cd7f',
                    'e37ecc4288ae8b2c3bea25484326a69ced9679fa791162ed593064fdf535944d',
                    'e142d7e1fbd103c96e3b728e3b75f7af6955c97cdbddb87c3202f2c1e2f133d4')
+    gff_hash = '8205a9eb570321605db4e5337f2c1d3f2ab6da6b9e43a7cfc35e5ac5182aad3c'
 
     def setUp(self) -> None:
         self.workdir = TemporaryDirectory()
@@ -75,3 +76,11 @@ class TestConvert(TestCase):
                 record_hash,
                 self.hash_file(record_path),
             )
+
+    def test_gff(self):
+        output_path = Path(self.workdir.name, 'gff')
+        convert(self.input_path, self.input_type, output_path, 'gff3')
+        self.assertEqual(
+            self.gff_hash,
+            self.hash_file(output_path),
+        )
