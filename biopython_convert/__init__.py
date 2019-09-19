@@ -79,16 +79,20 @@ def to_stats(record: SeqIO.SeqRecord) -> str:
     :param record: SeqIO.SeqRecord to represent
     :return: string containing GFF record
     """
-    attributes = {'Name': [record.name]}
+    # 'if' statements can be removed after https://github.com/daler/gffutils/pull/144
+    if record.name:
+        attributes = {'Name': [record.name]}
     for k, v in record.annotations.items():
         if k in stat_annotations:
             if isinstance(v, list):
                 v = [str(a) for a in v]
             else:
                 v = [str(v)]
-            attributes[k] = v
-    attributes['desc'] = [record.description]
-    return str(gffutils.Feature(record.id, "biopython-convert", "sequence", start=1, end=len(record), attributes=attributes))
+            if v:
+                attributes[k] = v
+    if record.description:
+        attributes['desc'] = [record.description]
+    return str(gffutils.Feature(record.id, "biopython.convert", "sequence", start=1, end=len(record), attributes=attributes))
 
 
 def get_records(input_handle, input_type: str, jpath: str = ''):
