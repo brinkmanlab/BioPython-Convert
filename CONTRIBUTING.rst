@@ -23,7 +23,7 @@ Repo Maintainers
 To create a new release for pypi and conda:
 
 1. Clone this repository
-2. Make sure all tests pass first by running `./setup.py test`
+2. Make sure all tests pass first by running :code:`./setup.py test`
 3. Use git or the GitHub interface to tag the repository with the next version. Precede the version number with a 'v'. Follow symantic versioning rules https://semver.org/:
 
     Given a version number MAJOR.MINOR.PATCH, increment the:
@@ -35,8 +35,8 @@ To create a new release for pypi and conda:
     PATCH version when you make backwards compatible bug fixes.
 
 4. Create a release via the GitHub interface for the new tag.
-5. Build the package by running `./setup.py build sdist`
-6. Upload the new package to pypi by running `twine upload -u brinkmanlab dist/<file with latest version number>.tar.gz`
+5. Build the package by running :code:`./setup.py build sdist`
+6. Upload the new package to pypi by running :code:`twine upload -u brinkmanlab dist/<file with latest version number>.tar.gz`
 
 Bioconda will detect the upload and automatically update its recipe. A Bioconda maintainer will manually approve the update.
 
