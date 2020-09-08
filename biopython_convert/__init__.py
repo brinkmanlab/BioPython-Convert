@@ -107,6 +107,11 @@ def get_records(input_handle, input_type: str, jpath: str = ''):
     :param jpath: JMESPath selecting records to keep. The root is the list of records. The path must return a list of records.
     :return: iterable of resulting records
     """
+    def gentype(x):
+        # Newer versions of biopython return iterator that is not of type Generator, wrap in generator type so jmespath can detect
+        for a in x:
+            yield a
+
     if input_type in gff_types:
         # If input is GFF load with gffutils library
         db = gffutils.create_db(input_handle, ":memory:", merge_strategy="create_unique")
@@ -123,7 +128,7 @@ def get_records(input_handle, input_type: str, jpath: str = ''):
 
     # Wrap input in JMESPath selector if provided
     if jpath:
-        input_records = JMESPathGen.search(jpath, input_records)
+        input_records = JMESPathGen.search(jpath, gentype(input_records))
 
     if isinstance(input_records, dict):
         # Support generating a new record in JMESPath
