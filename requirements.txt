@@ -1,4 +1,4 @@
-biopython>=1.73
-gffutils>=0.9
-jmespath>=0.9.4
+biopython>=1.78
+gffutils>=0.10.1
+jmespath>=0.10.0
 pbr
