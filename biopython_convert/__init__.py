@@ -6,6 +6,8 @@ Provides a means of querying/filtering documents using JMESPath query language.
 import sys
 import pathlib
 import itertools
+from collections import defaultdict
+
 import getopt
 
 from Bio import SeqIO
@@ -92,6 +94,13 @@ def to_stats(record: SeqIO.SeqRecord) -> str:
                 v = [str(v)]
             if v:
                 attributes[k] = v
+
+    # Count features of each type
+    feat_count = defaultdict(int)
+    for f in record.features:
+        feat_count[f.type] += 1
+    attributes['features'] = [f"{k}:{v}" for k, v in feat_count.items()]
+
     if record.description:
         attributes['desc'] = [record.description]
     return str(gffutils.Feature(record.id, "biopython.convert", "sequence", start=1, end=len(record), attributes=attributes))
