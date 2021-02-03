@@ -72,9 +72,11 @@ class TestConvert(TestCase):
         files = tuple(x for x in Path(self.workdir.name).glob('record.*') if x.is_file())
         self.assertEqual(len(self.record_hash), len(files))
         for record_path, record_hash in zip(files, self.record_hash):
+            h = self.hash_file(record_path)
             self.assertEqual(
                 record_hash,
-                self.hash_file(record_path),
+                h,
+                record_path
             )
 
     def test_gff(self):
