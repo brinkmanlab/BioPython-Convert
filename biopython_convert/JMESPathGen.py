@@ -75,7 +75,7 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
 
     def visit_not_expression(self, node, value):
         original_result = self.visit(node['children'][0], value)
-        if original_result is 0:
+        if original_result == 0:
             # Special case for 0, !0 should be false, not true.
             # 0 is not a special cased integer in jmespath.
             return False
