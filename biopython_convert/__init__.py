@@ -95,9 +95,17 @@ def to_stats(record: SeqIO.SeqRecord) -> str:
             if v:
                 attributes[k] = v
 
-    # Count features of each type
     feat_count = defaultdict(int)
     for f in record.features:
+        if f.type == 'source':
+            # Include source qualifiers
+            for k, v in f.qualifiers.items():
+                attr = attributes.get(f"source_{k}", [])
+                if not isinstance(attr, list):
+                    attr = [attr]
+                attr.append(v)
+                attributes[f"source_{k}"] = attr
+        # Count features of each type
         feat_count[f.type] += 1
     attributes['features'] = [f"{k}:{v}" for k, v in feat_count.items()]
 
