@@ -58,9 +58,11 @@ class TestConvert(TestCase):
     def test_split(self):
         output_path = Path(self.workdir.name, 'record')
         convert(self.input_path, self.input_type, output_path, self.input_type, split=True)
-        files = tuple(x for x in Path(self.workdir.name).glob('*') if x.is_file())
+        files = list(x for x in Path(self.workdir.name).glob('*') if x.is_file())
         truth_files = list(Path.joinpath(self.output_path, 'split').glob('*'))
-        self.assertEqual(len(truth_files), len(files))
+        files.sort()
+        truth_files.sort()
+        self.assertListEqual([f.name for f in truth_files], [f.name for f in files])
         for a, b in zip(truth_files, files):
             self.compare_files(a, b)
 

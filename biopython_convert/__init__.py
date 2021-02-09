@@ -9,6 +9,7 @@ import itertools
 from collections import defaultdict
 
 import getopt
+from typing import Generator
 
 from Bio import SeqIO
 import gffutils
@@ -158,7 +159,7 @@ def get_records(input_handle, input_type: str, jpath: str = ''):
     return input_records
 
 
-def _generate_suffixes(path: pathlib.Path) -> pathlib.Path:
+def _generate_suffixes(path: pathlib.Path) -> Generator[pathlib.Path, None, None]:
     """
     Helper to generate a new file path from a base path on each iteration
     :param path: base path to add suffix to
@@ -167,7 +168,7 @@ def _generate_suffixes(path: pathlib.Path) -> pathlib.Path:
     i = 0
     while True:
         # Open output file with file name suffix if splitting
-        yield path.with_suffix(f".${i}${path.suffix}")
+        yield path.with_suffix(f".{i}{path.suffix}")
         i += 1
 
 
