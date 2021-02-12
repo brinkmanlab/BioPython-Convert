@@ -73,7 +73,7 @@ class TestConvert(TestCase):
 
     def test_txt(self):
         output_path = Path(self.workdir.name, 'txt')
-        convert(self.input_path, self.input_type, output_path, 'txt', jpath='[*].annotations.taxonomy')
+        convert(self.input_path, self.input_type, output_path, 'text', jpath='[*].annotations.taxonomy')
         self.compare_files(Path.joinpath(self.output_path, 'txt'), output_path)
 
     def test_json(self):

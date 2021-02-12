@@ -18,7 +18,7 @@ from gffutils import biopython_integration
 from . import JMESPathGen
 
 gff_types = ['gff', 'gff3']
-extended_types = ['txt', 'json', 'yaml', 'yml']
+extended_types = ['text', 'json', 'yaml', 'yml']
 SeqIO_types = ['abi', 'abi-trim', 'ace', 'cif-atom', 'cif-seqres', 'clustal', 'embl', 'fasta', 'fasta-2line',
                'fastq-sanger', 'fastq', 'fastq-solexa', 'fastq-illumina', 'genbank', 'gb', 'ig', 'imgt', 'nexus',
                'pdb-seqres', 'pdb-atom', 'phd', 'phylip', 'pir', 'seqxml', 'sff', 'sff-trim', 'stockholm', 'swiss',
@@ -221,7 +221,7 @@ def _print_stats(record, stats):
 def convert(input_path, input_type, output_path, output_type, split=None, jpath='', stats=None):
     xform = _to_SeqRecord
     with input_path.open("r") as handle:
-        if output_type == 'txt':
+        if output_type == 'text':
             writer = lambda r, fh, t: fh.write("\n".join(map(str, r)) + "\n")
             xform = lambda x: x
         elif output_type == 'json':
