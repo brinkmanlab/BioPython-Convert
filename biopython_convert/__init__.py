@@ -235,16 +235,32 @@ def convert(input_path, input_type, output_path, output_type, split=None, jpath=
         if split:
             for record, path in zip(seq_records, _generate_suffixes(output_path)):
                 _print_stats(record, stats)
-                with path.open('w') as output_handle:
-                    writer((record,), output_handle, output_type)
+                while True:
+                    try:
+                        with path.open('w' + binary) as output_handle:
+                            writer((record,), output_handle, output_type)
+                    except StreamModeError:
+                        if binary == 'b':
+                            raise
+                        binary = 'b'
+                        continue
+                    break
         else:
-            with output_path.open('w') as output_handle:
-                writer(
-                    map(
-                        lambda r: _print_stats(r, stats),
-                        seq_records
-                    ),
-                    output_handle,
-                    output_type
-                )
+            while True:
+                try:
+                    with output_path.open('w' + binary) as output_handle:
+                        writer(
+                            map(
+                                lambda r: _print_stats(r, stats),
+                                seq_records
+                            ),
+                            output_handle,
+                            output_type
+                        )
+                except StreamModeError:
+                    if binary == 'b':
+                        raise
+                    binary = 'b'
+                    continue
+                break
 
