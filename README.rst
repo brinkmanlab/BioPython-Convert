@@ -60,13 +60,13 @@ Examples:
 
         [0]
 
-		Output taxonomy of each record (txt output)::
+    Output taxonomy of each record (txt output)::
 
-				[*].annotations.taxonomy
+        [*].annotations.taxonomy
 
-		Output json object containing id and molecule type::
+    Output json object containing id and molecule type::
 
-				[*].{id: id, type: annotations.molecule_type}
+        [*].{id: id, type: annotations.molecule_type}
 
 See CONTRIBUTING.rst_ for information on contributing to this repo.
 
