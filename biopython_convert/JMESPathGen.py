@@ -120,7 +120,7 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
 
     def visit_projection(self, node, value):
         base = self.visit(node['children'][0], value)
-        if not isinstance(base, list):
+        if not isinstance(base, (list, types.GeneratorType, map, filter)):
             return None
         for element in base:
             current = self.visit(node['children'][1], element)
