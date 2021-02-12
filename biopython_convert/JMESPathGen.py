@@ -35,7 +35,7 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
         super().__init__(*args, **kwargs)
         self._generators = {}
 
-    def _gen_to_list(self, gen):
+    def _gen_to_list(self, gen, recurse=False):
         """
         Called when a jmespath operation requires random access to generator.
         Memoises already converted generators and returns the already generated list.
@@ -46,6 +46,10 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
         if isinstance(gen, types.GeneratorType):
             l = list(gen)
             self._generators[id(gen)] = l
+            if recurse:
+                for i in range(len(l)):
+                    if isinstance(l[i], types.GeneratorType):
+                        l[i] = self._gen_to_list(l[i])
             return l
         return gen
 
@@ -69,7 +73,7 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
     def visit_function_expression(self, node, value):
         resolved_args = []
         for child in node['children']:
-            current = self._gen_to_list(self.visit(child, value))
+            current = self._gen_to_list(self.visit(child, value), True)
             resolved_args.append(current)
         return self._functions.call_function(node['value'], resolved_args)
 

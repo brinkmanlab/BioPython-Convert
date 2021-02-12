@@ -7,6 +7,7 @@ from pathlib import Path
 
 from biopython_convert import convert
 
+
 class TestConvert(TestCase):
     input_path = Path('test-data/has_plasmids.gbff')
     output_path = Path('test-data/outputs/')
@@ -85,3 +86,11 @@ class TestConvert(TestCase):
         output_path = Path(self.workdir.name, 'yaml')
         convert(self.input_path, self.input_type, output_path, 'yaml', jpath='[*].{id: id, annotations: annotations}')
         self.compare_files(Path.joinpath(self.output_path, 'yaml'), output_path)
+
+    def test_gentype(self):
+        """
+        Test handling the generator type within JMESPath functions
+        """
+        output_path = Path(self.workdir.name, 'gentype')
+        convert(self.input_path, self.input_type, output_path, 'text', jpath="[*].[(annotations.organism || annotations.source), 'foo'] | [*].join('\t', @)")
+        self.compare_files(Path.joinpath(self.output_path, 'gentype'), output_path)
