@@ -9,9 +9,9 @@ import itertools
 from collections import defaultdict
 
 import getopt
-from typing import Generator
+from typing import Callable, Generator
 
-from Bio import SeqIO
+from Bio import SeqIO, StreamModeError
 import gffutils
 from gffutils import biopython_integration
 
@@ -32,7 +32,7 @@ Use: biopython.convert [-s] [-v] [-i] [-q JMESPath] input_file input_type output
 \t-q JMESPath to select records. Must return list of SeqIO records. Root is list of input SeqIO records.
 \t-i Print out details of records during conversion
 \t-v Print version and exit
-""" + "\nValid types: " + ', '.join(SeqIO_types + gff_types) + "\n"
+""" + "\nValid types: " + ', '.join(SeqIO_types + gff_types + extended_types) + "\n"
 
 
 def get_args(sysargs: list):
@@ -117,7 +117,26 @@ def to_stats(record: SeqIO.SeqRecord) -> str:
     return str(gffutils.Feature(record.id, "biopython.convert", "sequence", start=1, end=len(record), attributes=attributes))
 
 
-def get_records(input_handle, input_type: str, jpath: str = ''):
+def _to_SeqRecord(records):
+    """
+    Helper to convert all output records to SeqRecords
+    :param records: dict or SeqRecord
+    :return: SeqRecord
+    """
+    if isinstance(records, dict):
+        # Support generating a single new record in JMESPath
+        records = SeqIO.SeqRecord(**records)
+
+    if isinstance(records, SeqIO.SeqRecord):
+        # Support returning single record from JMESPath
+        records = (records,)
+
+    records = map(lambda r: SeqIO.SeqRecord(**r) if isinstance(records, dict) else r, records)
+
+    return records
+
+
+def get_records(input_handle, input_type: str, jpath: str = '', xform: Callable = _to_SeqRecord):
     """
     Read in records and apply optional jmespath
     :param input_handle: File handle to read data from
@@ -125,6 +144,7 @@ def get_records(input_handle, input_type: str, jpath: str = ''):
         fastq-solexa,fastq-illumina,genbank,gb,ig,imgt,nexus,pdb-seqres,pdb-atom,phd,phylip,pir,seqxml,sff,sff-trim,
         stockholm,swiss,tab,qual,uniprot-xml,gff3
     :param jpath: JMESPath selecting records to keep. The root is the list of records. The path must return a list of records.
+    :param xform: Callable that takes the result of the jmespath and does anything necessary to convert to a iterable of output records
     :return: iterable of resulting records
     """
     def gentype(x):
@@ -150,13 +170,8 @@ def get_records(input_handle, input_type: str, jpath: str = ''):
     if jpath:
         input_records = JMESPathGen.search(jpath, gentype(input_records))
 
-    if isinstance(input_records, dict):
-        # Support generating a new record in JMESPath
-        input_records = SeqIO.SeqRecord(**input_records)
-
-    if isinstance(input_records, SeqIO.SeqRecord):
-        # Support returning single record from JMESPath
-        input_records = (input_records,)
+    # Apply xform to both entire return value and each returned element
+    input_records = xform(input_records)
 
     return input_records
 
@@ -191,18 +206,6 @@ def gff_writer(records: [SeqIO.SeqRecord], handle, output_type: str):
             print(feature, file=handle)
 
 
-def _to_SeqRecord(record):
-    """
-    Helper to convert all output records to SeqRecords
-    :param record: dict or SeqRecord
-    :return: SeqRecord
-    """
-    if isinstance(record, dict):
-        # Support generating new records in JMESPath
-        record = SeqIO.SeqRecord(**record)
-    return record
-
-
 def _print_stats(record, stats):
     """
     Helper to print stats of record
@@ -216,13 +219,20 @@ def _print_stats(record, stats):
 
 
 def convert(input_path, input_type, output_path, output_type, split=None, jpath='', stats=None):
+    xform = _to_SeqRecord
     with input_path.open("r") as handle:
         if output_type == 'txt':
-            raise NotImplemented
+            writer = lambda r, fh, t: fh.write("\n".join(map(str, r)) + "\n")
+            xform = lambda x: x
         elif output_type == 'json':
-            raise NotImplemented
+            import json
+            writer = lambda r, fh, t: json.dump(tuple(r), fh, skipkeys=True)
+            xform = lambda x: x
         elif output_type in ('yml', 'yaml'):
-            raise NotImplemented
+            from ruamel.yaml import YAML
+            yml = YAML(typ='unsafe')
+            writer = lambda r, fh, t: yml.dump(tuple(r), fh)
+            xform = lambda x: x
         elif output_type in gff_types:
             writer = gff_writer
         else:
@@ -231,7 +241,8 @@ def convert(input_path, input_type, output_path, output_type, split=None, jpath=
         if stats:
             print("##gff-version 3", file=stats)
 
-        seq_records = map(_to_SeqRecord, get_records(handle, input_type, jpath))
+        seq_records = get_records(handle, input_type, jpath, xform)
+        binary = ''
         if split:
             for record, path in zip(seq_records, _generate_suffixes(output_path)):
                 _print_stats(record, stats)

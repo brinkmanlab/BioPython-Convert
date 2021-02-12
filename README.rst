@@ -38,13 +38,14 @@ Use
 Supported formats
     abi, abi-trim, ace, cif-atom, cif-seqres, clustal, embl, fasta, fasta-2line, fastq-sanger, fastq,
     fastq-solexa, fastq-illumina, genbank, gb, ig, imgt, nexus, pdb-seqres, pdb-atom, phd, phylip, pir, seqxml,
-    sff, sff-trim, stockholm, swiss, tab, qual, uniprot-xml, gff3
+    sff, sff-trim, stockholm, swiss, tab, qual, uniprot-xml, gff3, txt, json, yaml
 
 JMESPath_
 ---------
 The root node for a query is a list of SeqRecord_ objects. The query can return a list with a subset of these or
 a mapping, keying to the `constructor parameters`_ of a SeqRecord object.
 
+If the formats are txt, json, or yaml, then the JMESPath resulting object will simply be dumped in those formats.
 
 Examples:
     Append a new record::
@@ -53,12 +54,19 @@ Examples:
 
     Filter out any plasmids::
 
-        [?!(features[?type==`source`].qualifiers.plasmid)]
+        [?!(features[?type=='source'].qualifiers.plasmid)]
 
     Keep only the first record::
 
         [0]
 
+		Output taxonomy of each record (txt output)::
+
+				[*].annotations.taxonomy
+
+		Output json object containing id and molecule type::
+
+				[*].{id: id, type: annotations.molecule_type}
 
 See CONTRIBUTING.rst_ for information on contributing to this repo.
 
