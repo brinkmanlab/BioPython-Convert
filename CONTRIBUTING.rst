@@ -35,6 +35,9 @@ To create a new release for pypi and conda:
     PATCH version when you make backwards compatible bug fixes.
 
 4. Create a release via the GitHub interface for the new tag.
+
+At this point the GitHub CI will kick in and automatically do the following steps
+
 5. Build the package by running :code:`./setup.py build sdist`
 6. Upload the new package to pypi by running :code:`twine upload -u brinkmanlab dist/<file with latest version number>.tar.gz`
 
