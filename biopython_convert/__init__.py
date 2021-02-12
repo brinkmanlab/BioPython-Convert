@@ -99,6 +99,8 @@ def to_stats(record: SeqIO.SeqRecord) -> str:
     feat_count = defaultdict(int)
     for f in record.features:
         if f.type == 'source':
+            # Include source coordinate
+            attributes[f"source__location"] = [str(part) for part in f.location.parts]
             # Include source qualifiers
             for k, v in f.qualifiers.items():
                 attr = attributes.get(f"source_{k}", [])
