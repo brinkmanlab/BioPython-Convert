@@ -50,7 +50,7 @@ If the formats are txt, json, or yaml, then the JMESPath resulting object will s
 Examples:
     Append a new record::
 
-        [@, [{`seq`: `AAAA`, `name`: `my_new_record`}]] | []
+        [@, [{'seq': 'AAAA', 'name': 'my_new_record'}]] | []
 
     Filter out any plasmids::
 
