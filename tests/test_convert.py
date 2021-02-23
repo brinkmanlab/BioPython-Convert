@@ -33,7 +33,7 @@ class TestConvert(TestCase):
 
     def test_basic(self):
         output_path = Path(self.workdir.name, 'basic')
-        convert(Path(self.input_path), self.input_type, output_path, self.input_type)
+        convert(self.input_path, self.input_type, output_path, self.input_type)
         self.compare_files(Path.joinpath(self.output_path, 'basic'), output_path)
 
     def test_info(self):
@@ -77,15 +77,32 @@ class TestConvert(TestCase):
         convert(self.input_path, self.input_type, output_path, 'text', jpath='[*].annotations.taxonomy')
         self.compare_files(Path.joinpath(self.output_path, 'txt'), output_path)
 
+    def test_txt_stats(self):
+        output_path = Path(self.workdir.name, 'txt')
+        stats = io.StringIO()
+        convert(self.input_path, self.input_type, output_path, 'text', jpath='[*].annotations.taxonomy', stats=stats)
+        self.compare_files(Path.joinpath(self.output_path, 'txt'), output_path)
+        self.assertEqual(1, len(stats.getvalue().splitlines(keepends=True)))
+
     def test_json(self):
         output_path = Path(self.workdir.name, 'json')
-        convert(self.input_path, self.input_type, output_path, 'json', jpath='[*].{id: id, type: annotations.molecule_type}')
+        convert(self.input_path, self.input_type, output_path, 'json')
         self.compare_files(Path.joinpath(self.output_path, 'json'), output_path)
 
     def test_yaml(self):
         output_path = Path(self.workdir.name, 'yaml')
-        convert(self.input_path, self.input_type, output_path, 'yaml', jpath='[*].{id: id, annotations: annotations}')
+        convert(self.input_path, self.input_type, output_path, 'yaml')
         self.compare_files(Path.joinpath(self.output_path, 'yaml'), output_path)
+
+    def test_json_jpath(self):
+        output_path = Path(self.workdir.name, 'json_jpath')
+        convert(self.input_path, self.input_type, output_path, 'json', jpath='[*].{id: id, type: annotations.molecule_type}')
+        self.compare_files(Path.joinpath(self.output_path, 'json_jpath'), output_path)
+
+    def test_yaml_jpath(self):
+        output_path = Path(self.workdir.name, 'yaml_jpath')
+        convert(self.input_path, self.input_type, output_path, 'yaml', jpath='[*].{id: id, annotations: annotations}')
+        self.compare_files(Path.joinpath(self.output_path, 'yaml_jpath'), output_path)
 
     def test_gentype(self):
         """

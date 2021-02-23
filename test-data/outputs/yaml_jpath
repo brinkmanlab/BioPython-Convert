@@ -1,0 +1,164 @@
+- annotations:
+    accessions: [NC_008563]
+    comment: "REFSEQ INFORMATION: The reference sequence was derived from\nCP000468.\n\
+      Annotation was added by the NCBI Prokaryotic Genome Annotation\nPipeline (released\
+      \ 2013). Information about the Pipeline can be\nfound here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/\n\
+      Growth conditions for DNA isolation: 37C, 12 hr, LB broth. Strain\navailable\
+      \ upon request from authors Lisa Nolan or Tim Johnson,\nemail to: timjohns@iastate.edu.\n\
+      COMPLETENESS: full length."
+    contig: join(CP000468.1:1..5082025)
+    data_file_division: CON
+    date: 22-FEB-2017
+    keywords: [RefSeq]
+    molecule_type: DNA
+    organism: Escherichia coli APEC O1
+    references:
+    - authors: Johnson,T.J., Kariyawasam,S., Wannemuehler,Y., Mangiamele,P., Johnson,S.J.,
+        Doetkott,C., Skyberg,J.A., Lynne,A.M., Johnson,J.R. and Nolan,L.K.
+      comment: Erratum:[J Bacteriol. 2007 Jun;189(12):4554]
+      consrtm: ''
+      journal: J. Bacteriol. 189 (8), 3228-3236 (2007)
+      location:
+      - {end: 5082025, ref: null, ref_db: null, start: 0, strand: null}
+      medline_id: ''
+      pubmed_id: 17293413
+      title: The genome sequence of avian pathogenic Escherichia coli strain O1:K1:H7
+        shares strong similarities with human extraintestinal pathogenic E. coli genomes
+    - authors: Johnson,T.J. and Nolan,L.K.
+      comment: tRNA update by submitter
+      consrtm: ''
+      journal: Submitted (02-JAN-2009) Veterinary Microbiology and Preventive Medicine,
+        Iowa State University, 1802 Elwood Drive, VMRI 2, Ames, IA 50011, USA
+      location:
+      - {end: 5082025, ref: null, ref_db: null, start: 0, strand: null}
+      medline_id: ''
+      pubmed_id: ''
+      title: Direct Submission
+    - authors: Johnson,T.J. and Nolan,L.K.
+      comment: ''
+      consrtm: ''
+      journal: Submitted (14-SEP-2006) Veterinary Microbiology and Preventive Medicine,
+        Iowa State University, 1802 Elwood Drive, VMRI 2, Ames, IA 50011, USA
+      location:
+      - {end: 5082025, ref: null, ref_db: null, start: 0, strand: null}
+      medline_id: ''
+      pubmed_id: ''
+      title: Direct Submission
+    sequence_version: 1
+    source: Escherichia coli APEC O1
+    structured_comment:
+      Genome-Annotation-Data: {Annotation Date: 02/22/2017 01:36:07, Annotation Method: Best-placed
+          reference protein set; GeneMarkS+, Annotation Pipeline: NCBI Prokaryotic
+          Genome Annotation Pipeline, Annotation Provider: NCBI, Annotation Software revision: '4.1',
+        CDS (coding): '5,382', CDS (total): '5,648', CRISPR Arrays: 2, Features Annotated: Gene;
+          CDS; rRNA; tRNA; ncRNA; repeat_region, Genes (RNA): 124, Genes (coding): '5,382',
+        Genes (total): '5,772', Pseudo Genes (ambiguous residues): 0 of 266, Pseudo Genes (frameshifted): 152
+          of 266, Pseudo Genes (incomplete): 79 of 266, Pseudo Genes (internal stop): 71
+          of 266, Pseudo Genes (multiple problems): 35 of 266, Pseudo Genes (total): 266,
+        complete rRNAs: '8, 7, 7 (5S, 16S, 23S)', ncRNAs: 6, rRNAs: '8, 7, 7 (5S,
+          16S, 23S)', tRNAs: 96}
+    taxonomy: [Bacteria, Proteobacteria, Gammaproteobacteria, Enterobacterales, Enterobacteriaceae,
+      Escherichia]
+    topology: circular
+  id: NC_008563.1
+- annotations:
+    accessions: [NC_009837]
+    comment: "REFSEQ INFORMATION: The reference sequence was derived from\nDQ381420.\n\
+      Annotation was added by the NCBI Prokaryotic Genome Annotation\nPipeline (released\
+      \ 2013). Information about the Pipeline can be\nfound here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/\n\
+      COMPLETENESS: full length."
+    contig: join(DQ381420.1:1..174241)
+    data_file_division: CON
+    date: 22-FEB-2017
+    keywords: [RefSeq]
+    molecule_type: DNA
+    organism: Escherichia coli APEC O1
+    references:
+    - authors: Johnson,T.J., Johnson,S.J. and Nolan,L.K.
+      comment: ''
+      consrtm: ''
+      journal: J. Bacteriol. 188 (16), 5975-5983 (2006)
+      location:
+      - {end: 174241, ref: null, ref_db: null, start: 0, strand: null}
+      medline_id: ''
+      pubmed_id: 16885466
+      title: Complete DNA sequence of a ColBM plasmid from avian pathogenic Escherichia
+        coli suggests that it evolved from closely related ColV virulence plasmids
+    - authors: Johnson,T.J. and Nolan,L.K.
+      comment: ''
+      consrtm: ''
+      journal: 'Submitted (27-JAN-2006) Vet. Micro. Prev. Med., Iowa State University,
+        1802 Elwood Drive, VMRI #2, Ames, IA 50011, USA'
+      location:
+      - {end: 174241, ref: null, ref_db: null, start: 0, strand: null}
+      medline_id: ''
+      pubmed_id: ''
+      title: Direct Submission
+    sequence_version: 1
+    source: Escherichia coli APEC O1
+    structured_comment:
+      Genome-Annotation-Data: {Annotation Date: 02/22/2017 01:36:07, Annotation Method: Best-placed
+          reference protein set; GeneMarkS+, Annotation Pipeline: NCBI Prokaryotic
+          Genome Annotation Pipeline, Annotation Provider: NCBI, Annotation Software revision: '4.1',
+        CDS (coding): '5,382', CDS (total): '5,648', CRISPR Arrays: 2, Features Annotated: Gene;
+          CDS; rRNA; tRNA; ncRNA; repeat_region, Genes (RNA): 124, Genes (coding): '5,382',
+        Genes (total): '5,772', Pseudo Genes (ambiguous residues): 0 of 266, Pseudo Genes (frameshifted): 152
+          of 266, Pseudo Genes (incomplete): 79 of 266, Pseudo Genes (internal stop): 71
+          of 266, Pseudo Genes (multiple problems): 35 of 266, Pseudo Genes (total): 266,
+        complete rRNAs: '8, 7, 7 (5S, 16S, 23S)', ncRNAs: 6, rRNAs: '8, 7, 7 (5S,
+          16S, 23S)', tRNAs: 96}
+    taxonomy: [Bacteria, Proteobacteria, Gammaproteobacteria, Enterobacterales, Enterobacteriaceae,
+      Escherichia]
+    topology: circular
+  id: NC_009837.1
+- annotations:
+    accessions: [NC_009838]
+    comment: "REFSEQ INFORMATION: The reference sequence was derived from\nDQ517526.\n\
+      Annotation was added by the NCBI Prokaryotic Genome Annotation\nPipeline (released\
+      \ 2013). Information about the Pipeline can be\nfound here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/\n\
+      COMPLETENESS: full length."
+    contig: join(DQ517526.1:1..241387)
+    data_file_division: CON
+    date: 22-FEB-2017
+    keywords: [RefSeq]
+    molecule_type: DNA
+    organism: Escherichia coli APEC O1
+    references:
+    - authors: Johnson,T.J., Wannemeuhler,Y.M., Scaccianoce,J.A., Johnson,S.J. and
+        Nolan,L.K.
+      comment: ''
+      consrtm: ''
+      journal: Antimicrob. Agents Chemother. 50 (11), 3929-3933 (2006)
+      location:
+      - {end: 241387, ref: null, ref_db: null, start: 0, strand: null}
+      medline_id: ''
+      pubmed_id: 16940062
+      title: Complete DNA sequence, comparative genomics, and prevalence of an IncHI2
+        plasmid occurring among extraintestinal pathogenic Escherichia coli isolates
+    - authors: Johnson,T.J. and Nolan,L.K.
+      comment: ''
+      consrtm: ''
+      journal: Submitted (26-APR-2006) Veterinary Microbiology and Preventive Medicine,
+        Iowa State University, 1802 Elwood Drive, VMRI 2, Ames, IA 50011, USA
+      location:
+      - {end: 241387, ref: null, ref_db: null, start: 0, strand: null}
+      medline_id: ''
+      pubmed_id: ''
+      title: Direct Submission
+    sequence_version: 1
+    source: Escherichia coli APEC O1
+    structured_comment:
+      Genome-Annotation-Data: {Annotation Date: 02/22/2017 01:36:07, Annotation Method: Best-placed
+          reference protein set; GeneMarkS+, Annotation Pipeline: NCBI Prokaryotic
+          Genome Annotation Pipeline, Annotation Provider: NCBI, Annotation Software revision: '4.1',
+        CDS (coding): '5,382', CDS (total): '5,648', CRISPR Arrays: 2, Features Annotated: Gene;
+          CDS; rRNA; tRNA; ncRNA; repeat_region, Genes (RNA): 124, Genes (coding): '5,382',
+        Genes (total): '5,772', Pseudo Genes (ambiguous residues): 0 of 266, Pseudo Genes (frameshifted): 152
+          of 266, Pseudo Genes (incomplete): 79 of 266, Pseudo Genes (internal stop): 71
+          of 266, Pseudo Genes (multiple problems): 35 of 266, Pseudo Genes (total): 266,
+        complete rRNAs: '8, 7, 7 (5S, 16S, 23S)', ncRNAs: 6, rRNAs: '8, 7, 7 (5S,
+          16S, 23S)', tRNAs: 96}
+    taxonomy: [Bacteria, Proteobacteria, Gammaproteobacteria, Enterobacterales, Enterobacteriaceae,
+      Escherichia]
+    topology: circular
+  id: NC_009838.1

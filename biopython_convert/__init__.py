@@ -6,12 +6,13 @@ Provides a means of querying/filtering documents using JMESPath query language.
 import sys
 import pathlib
 import itertools
+import types
 from collections import defaultdict
 
 import getopt
-from typing import Callable, Generator
+from typing import Callable, Generator, OrderedDict
 
-from Bio import SeqIO, StreamModeError
+from Bio import SeqIO, StreamModeError, SeqFeature
 import gffutils
 from gffutils import biopython_integration
 
@@ -117,6 +118,18 @@ def to_stats(record: SeqIO.SeqRecord) -> str:
     return str(gffutils.Feature(record.id, "biopython.convert", "sequence", start=1, end=len(record), attributes=attributes))
 
 
+def _allow_single(records):
+    """
+    Helper to allow returing single record from JMESPath
+    :param records: SeqIO.SeqRecord instance
+    :return: tuple containing SeqIO.SeqRecord
+    """
+    if isinstance(records, SeqIO.SeqRecord):
+        # Support returning single record from JMESPath
+        return (records,)
+    return records
+
+
 def _to_SeqRecord(records):
     """
     Helper to convert all output records to SeqRecords
@@ -127,13 +140,9 @@ def _to_SeqRecord(records):
         # Support generating a single new record in JMESPath
         records = SeqIO.SeqRecord(**records)
 
-    if isinstance(records, SeqIO.SeqRecord):
-        # Support returning single record from JMESPath
-        records = (records,)
+    records = _allow_single(records)
 
-    records = map(lambda r: SeqIO.SeqRecord(**r) if isinstance(records, dict) else r, records)
-
-    return records
+    return map(lambda r: SeqIO.SeqRecord(**r) if isinstance(records, dict) else r, records)
 
 
 def get_records(input_handle, input_type: str, jpath: str = '', xform: Callable = _to_SeqRecord):
@@ -170,7 +179,7 @@ def get_records(input_handle, input_type: str, jpath: str = '', xform: Callable 
     if jpath:
         input_records = JMESPathGen.search(jpath, gentype(input_records))
 
-    # Apply xform to both entire return value and each returned element
+    # Apply xform to both entire return value
     input_records = xform(input_records)
 
     return input_records
@@ -218,21 +227,107 @@ def _print_stats(record, stats):
     return record
 
 
-def convert(input_path, input_type, output_path, output_type, split=None, jpath='', stats=None):
+def to_strings(v):
+    """
+    Helper to recursively convert Generators to lists, stringifing all else
+    :param v: Parent object/list
+    :return: list/dict with all children converted to the same or a string
+    """
+    if isinstance(v, str):
+        return v
+
+    if isinstance(v, (types.GeneratorType, map, filter, tuple)):
+        v = list(v)
+
+    if hasattr(v, 'keys'):
+        keys = v.keys()
+    elif hasattr(v, '__getitem__'):
+        keys = range(len(v))
+    else:
+        return str(v)
+
+    for i in keys:
+        v[i] = to_strings(v[i])
+    return v
+
+
+def to_dicts(v):
+    """
+    Helper to recursively convert Objects and Generators to dicts and lists
+    :param v: Parent object/list
+    :return: list/dict with all children converted to the same
+    """
+    if isinstance(v, str):
+        try:
+            return int(v)
+        except ValueError:
+            pass
+        return v
+
+    if isinstance(v, (types.GeneratorType, map, filter, tuple)):
+        v = list(v)
+
+    if isinstance(v, SeqIO.SeqRecord):
+        v = {
+            **v.__dict__,
+            'seq': str(v.seq)
+        }
+        del v['_seq']
+    elif isinstance(v, SeqFeature.FeatureLocation):
+        v = {
+            **v.__dict__,
+            'start': v.start,
+            'end': v.end,
+            'strand': v.strand,
+        }
+        del v['_start']
+        del v['_end']
+        del v['_strand']
+    elif isinstance(v, SeqFeature.AbstractPosition):
+        return to_dicts(str(v))
+    elif isinstance(v, OrderedDict):
+        v = dict(v)
+    elif hasattr(v, '__dict__'):
+        v = v.__dict__
+
+    if hasattr(v, 'keys'):
+        keys = v.keys()
+    elif hasattr(v, '__getitem__'):
+        keys = range(len(v))
+    else:
+        return v
+
+    for i in keys:
+        v[i] = to_dicts(v[i])
+    return v
+
+
+def convert(input_path: pathlib.Path, input_type: str, output_path: pathlib.Path, output_type: str, split: bool = False, jpath: str = '', stats=None):
+    """
+    Convert document from one format to another, optionally querying via JMESPath or splitting into separate outputs
+    :param input_path: Path to input dataset
+    :param input_type: Format of input dataset
+    :param output_path: Path to output dataset
+    :param output_type: Format of output dataset
+    :param split: Split each record into a different output dataset. Adds index suffix to output path.
+    :param jpath: JMESPath query to apply to input dataset before outputting
+    :param stats: File handle to output GFF3 summary of output records
+    :return: None
+    """
     xform = _to_SeqRecord
     with input_path.open("r") as handle:
         if output_type == 'text':
-            writer = lambda r, fh, t: fh.write("\n".join(map(str, r)) + "\n")
+            writer = lambda records, fh, t: fh.write("\n".join(map(str, to_strings(records))) + "\n")
             xform = lambda x: x
         elif output_type == 'json':
             import json
-            writer = lambda r, fh, t: json.dump(tuple(r), fh, skipkeys=True)
-            xform = lambda x: x
+            writer = lambda records, fh, t: json.dump(to_dicts(records), fh, skipkeys=True, indent=True)
+            xform = _allow_single
         elif output_type in ('yml', 'yaml'):
             from ruamel.yaml import YAML
             yml = YAML(typ='unsafe')
-            writer = lambda r, fh, t: yml.dump(tuple(r), fh)
-            xform = lambda x: x
+            writer = lambda records, fh, t: yml.dump(to_dicts(records), fh)
+            xform = _allow_single
         elif output_type in gff_types:
             writer = gff_writer
         else:
