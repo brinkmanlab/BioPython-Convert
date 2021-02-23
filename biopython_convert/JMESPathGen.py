@@ -42,10 +42,11 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
         :param gen: generator object
         :return: list of values returned by generator
         """
-        gen = self._generators.get(id(gen), gen)
+        if getattr(gen, '__hash__', None) is not None:
+            gen = self._generators.get(gen, gen)
         if isinstance(gen, types.GeneratorType):
             l = list(gen)
-            self._generators[id(gen)] = l
+            self._generators[gen] = l
             if recurse:
                 for i in range(len(l)):
                     if isinstance(l[i], types.GeneratorType):
@@ -57,7 +58,7 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
         # if a visit caused list conversion, get list. Assume that 'value' is args[0].
         if len(args) and isinstance(args[0], types.GeneratorType):
             args = list(args) #convert from tuple
-            args[0] = self._generators.get(id(args[0]), args[0])
+            args[0] = self._generators.get(args[0], args[0])
         return super().visit(node, *args, **kwargs)
 
     def visit_field(self, node, value):
@@ -87,7 +88,7 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
 
     def visit_filter_projection(self, node, value):
         base = self.visit(node['children'][0], value)
-        if not (isinstance(base, list) or isinstance(base, types.GeneratorType)):
+        if not isinstance(base, (list, types.GeneratorType, map, filter)):
             return None
         comparator_node = node['children'][2]
         for element in base:
@@ -99,11 +100,11 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
 
     def visit_flatten(self, node, value):
         base = self.visit(node['children'][0], value)
-        if not isinstance(base, list):
+        if not isinstance(base, (list, types.GeneratorType, map, filter)):
             # Can't flatten the object if it's not a list.
             return None
         for element in base:
-            if isinstance(element, list):
+            if isinstance(element, (list, types.GeneratorType, map, filter)):
                 for subelement in element:
                     yield subelement
             else:
