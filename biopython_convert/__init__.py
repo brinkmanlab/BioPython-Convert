@@ -213,7 +213,7 @@ def _print_stats(record, stats):
     :param stats: IO handle or None
     :return: record, unaltered
     """
-    if stats:
+    if stats and isinstance(record, SeqIO.SeqRecord):
         print(to_stats(record), file=stats)
     return record
 
