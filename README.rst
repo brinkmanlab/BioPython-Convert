@@ -72,6 +72,10 @@ Examples:
 
         [*].{id: id, type: annotations.molecule_type}
 
+    Convert dataset to PTT format using text output::
+
+        [0].[join(' - 1..', [description, to_string(length(seq))]), join(' ', [to_string(length(features[?type=='CDS' && qualifiers.translation])), 'proteins']), join(`"\t"`, ['Location', 'Strand', 'Length', 'PID', 'Gene', 'Synonym', 'Code', 'COG', 'Product']), (features[?type=='CDS' && qualifiers.translation].[join('..', [to_string(sum([location.start, `1`])), to_string(location.end)]), [location.strand][?@==`1`] && '+' || '-', length(qualifiers.translation[0]), qualifiers.db_xref[?starts_with(@, 'GI')][0] || '-', qualifiers.gene[0] || '-', qualifiers.locus_tag[0] || '-', '-', '-', qualifiers.product[0] ] | [*].join(`"\t"`, [*].to_string(@)) )] | []
+
 See CONTRIBUTING.rst_ for information on contributing to this repo.
 
 .. _CONTRIBUTING.rst: CONTRIBUTING.rst
