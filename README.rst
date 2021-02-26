@@ -47,6 +47,10 @@ a mapping, keying to the `constructor parameters`_ of a SeqRecord object.
 
 If the formats are txt, json, or yaml, then the JMESPath resulting object will simply be dumped in those formats.
 
+A web based tool is available to experiment with constructing queries in real time on your data. Simply convert your
+dataset to JSON and load it into the `JMESPath playground`_ to begin composing your query. It supports loading JSON files
+directly rather than trying to copy/paste the data.
+
 Examples:
     Append a new record::
 
@@ -74,3 +78,4 @@ See CONTRIBUTING.rst_ for information on contributing to this repo.
 .. _JMESPath: http://jmespath.org/
 .. _SeqRecord: https://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html
 .. _constructor parameters: https://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html#__init__
+.. _JMESPath playground: https://glenveegee.github.io/jmespath-edit/
