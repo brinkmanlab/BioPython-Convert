@@ -56,6 +56,8 @@ def get_args(sysargs: list):
             elif opt == '-s':
                 split = True
             elif opt == '-q':
+                if not val:
+                    raise getopt.GetoptError("JMESPath must not be empty", "-q")
                 jpath = val
             elif opt == '-i':
                 stats = sys.stdout
