@@ -12,7 +12,7 @@ from collections import defaultdict
 import getopt
 from typing import Callable, Generator, OrderedDict
 
-from Bio import SeqIO, StreamModeError, SeqFeature
+from Bio import SeqIO, StreamModeError, SeqFeature, Seq
 import gffutils
 from gffutils import biopython_integration
 
@@ -130,22 +130,36 @@ def _allow_single(records):
     return records
 
 
-def _to_SeqRecord(records):
+def _to_SeqRecord(record):
+    """
+    Support generating a single new record in JMESPath
+    :param record: dict of SeqRecord constructor parameters
+    :return: SeqRecord
+    """
+    seq = record.get('seq', {})
+    del record['seq']
+    if isinstance(seq, str):
+        seq = Seq.Seq(seq)
+    elif isinstance(seq, dict):
+        seq = Seq.Seq(**seq)
+    return SeqIO.SeqRecord(seq=seq, **record)
+
+
+def _to_SeqRecords(records):
     """
     Helper to convert all output records to SeqRecords
     :param records: dict or SeqRecord
     :return: SeqRecord
     """
     if isinstance(records, dict):
-        # Support generating a single new record in JMESPath
-        records = SeqIO.SeqRecord(**records)
+        records = _to_SeqRecord(records)
 
     records = _allow_single(records)
 
-    return map(lambda r: SeqIO.SeqRecord(**r) if isinstance(records, dict) else r, records)
+    return map(lambda r: _to_SeqRecord(r) if isinstance(r, dict) else r, records)
 
 
-def get_records(input_handle, input_type: str, jpath: str = '', xform: Callable = _to_SeqRecord):
+def get_records(input_handle, input_type: str, jpath: str = '', xform: Callable = _to_SeqRecords):
     """
     Read in records and apply optional jmespath
     :param input_handle: File handle to read data from
@@ -314,7 +328,7 @@ def convert(input_path: pathlib.Path, input_type: str, output_path: pathlib.Path
     :param stats: File handle to output GFF3 summary of output records
     :return: None
     """
-    xform = _to_SeqRecord
+    xform = _to_SeqRecords
     with input_path.open("r") as handle:
         if output_type == 'text':
             writer = lambda records, fh, t: fh.write("\n".join(map(str, to_strings(records))) + "\n")
