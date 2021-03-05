@@ -77,6 +77,11 @@ class TestConvert(TestCase):
         convert(self.input_path, self.input_type, output_path, 'text', jpath='[*].annotations.taxonomy')
         self.compare_files(Path.joinpath(self.output_path, 'txt'), output_path)
 
+    def test_ptt(self):
+        output_path = Path(self.workdir.name, 'ptt')
+        convert(self.input_path, self.input_type, output_path, 'text', jpath="[0].[join(' - 1..', [description, to_string(length(seq))]), join(' ', [to_string(length(features[?type=='CDS' && qualifiers.translation])), 'proteins']), join(`\"\\t\"`, ['Location', 'Strand', 'Length', 'PID', 'Gene', 'Synonym', 'Code', 'COG', 'Product']), (features[?type=='CDS' && qualifiers.translation].[join('..', [to_string(sum([location.start, `1`])), to_string(location.end)]), [location.strand][?@==`1`] && '+' || '-', length(qualifiers.translation[0]), (qualifiers.db_xref[?starts_with(@, 'GI')].split(':', @)[1])[0] || '-', qualifiers.gene[0] || '-', qualifiers.locus_tag[0] || '-', '-', '-', qualifiers.product[0] ] | [*].join(`\"\\t\"`, [*].to_string(@)) )] | []")
+        self.compare_files(Path.joinpath(self.output_path, 'ptt'), output_path)
+
     def test_txt_stats(self):
         output_path = Path(self.workdir.name, 'txt')
         stats = io.StringIO()
@@ -99,6 +104,16 @@ class TestConvert(TestCase):
         convert(self.input_path, self.input_type, output_path, 'json', jpath='[*].{id: id, type: annotations.molecule_type}')
         self.compare_files(Path.joinpath(self.output_path, 'json_jpath'), output_path)
 
+    def test_json_jpath_split(self):
+        output_path = Path(self.workdir.name, 'json_jpath_split')
+        convert(self.input_path, self.input_type, output_path, 'json', jpath='[*].{id: split(\'.\', id), type: annotations.molecule_type}')
+        self.compare_files(Path.joinpath(self.output_path, 'json_jpath_split'), output_path)
+
+    def test_json_jpath_let(self):
+        output_path = Path(self.workdir.name, 'json_jpath_let')
+        convert(self.input_path, self.input_type, output_path, 'json', jpath='[*].let({type: annotations.molecule_type}, &{id: id, type: type})')
+        self.compare_files(Path.joinpath(self.output_path, 'json_jpath_let'), output_path)
+
     def test_yaml_jpath(self):
         output_path = Path(self.workdir.name, 'yaml_jpath')
         convert(self.input_path, self.input_type, output_path, 'yaml', jpath='[*].{id: id, annotations: annotations}')
@@ -111,3 +126,21 @@ class TestConvert(TestCase):
         output_path = Path(self.workdir.name, 'gentype')
         convert(self.input_path, self.input_type, output_path, 'text', jpath="[*].[(annotations.organism || annotations.source), 'foo'] | [*].join('\t', @)")
         self.compare_files(Path.joinpath(self.output_path, 'gentype'), output_path)
+
+    def test_creation(self):
+        """
+        Test handling JMESPath creating new SeqRecords
+        """
+        output_path = Path(self.workdir.name, 'faa')
+        convert(self.input_path, self.input_type, output_path, 'fasta', jpath="""
+[0].let({org: (annotations.organism || annotations.source)}, &(features[?type=='CDS' && qualifiers.translation].{id:
+join('|', [
+  (qualifiers.db_xref[?starts_with(@, 'GI')].['gi', split(':', @)[1]]),
+  (qualifiers.protein_id[*].['ref', @]),
+  (qualifiers.locus_tag[*].['locus', @]),
+  join('', [':', [location][?strand==`-1`] && 'c' || '', to_string(sum([location.start, `1`])), '..', to_string(location.end)])
+][][]),
+seq: qualifiers.translation[0],
+description: (org && join('', [qualifiers.product[0], ' [', org, ']']) || qualifiers.product[0])}))
+        """)
+        self.compare_files(Path.joinpath(self.output_path, 'faa'), output_path)

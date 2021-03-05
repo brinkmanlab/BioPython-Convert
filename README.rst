@@ -51,6 +51,8 @@ A web based tool is available to experiment with constructing queries in real ti
 dataset to JSON and load it into the `JMESPath playground`_ to begin composing your query. It supports loading JSON files
 directly rather than trying to copy/paste the data.
 
+`split()`_ and `let()`_ functions are available in addition to the JMESPath standard functions
+
 Examples:
     Append a new record::
 
@@ -74,7 +76,19 @@ Examples:
 
     Convert dataset to PTT format using text output::
 
-        [0].[join(' - 1..', [description, to_string(length(seq))]), join(' ', [to_string(length(features[?type=='CDS' && qualifiers.translation])), 'proteins']), join(`"\t"`, ['Location', 'Strand', 'Length', 'PID', 'Gene', 'Synonym', 'Code', 'COG', 'Product']), (features[?type=='CDS' && qualifiers.translation].[join('..', [to_string(sum([location.start, `1`])), to_string(location.end)]), [location.strand][?@==`1`] && '+' || '-', length(qualifiers.translation[0]), qualifiers.db_xref[?starts_with(@, 'GI')][0] || '-', qualifiers.gene[0] || '-', qualifiers.locus_tag[0] || '-', '-', '-', qualifiers.product[0] ] | [*].join(`"\t"`, [*].to_string(@)) )] | []
+        [0].[join(' - 1..', [description, to_string(length(seq))]), join(' ', [to_string(length(features[?type=='CDS' && qualifiers.translation])), 'proteins']), join(`"\t"`, ['Location', 'Strand', 'Length', 'PID', 'Gene', 'Synonym', 'Code', 'COG', 'Product']), (features[?type=='CDS' && qualifiers.translation].[join('..', [to_string(sum([location.start, `1`])), to_string(location.end)]), [location.strand][?@==`1`] && '+' || '-', length(qualifiers.translation[0]), (qualifiers.db_xref[?starts_with(@, 'GI')].split(':', @)[1])[0] || '-', qualifiers.gene[0] || '-', qualifiers.locus_tag[0] || '-', '-', '-', qualifiers.product[0] ] | [*].join(`"\t"`, [*].to_string(@)) )] | []
+
+		Convert dataset to faa format using fasta output::
+
+				[0].let({org: (annotations.organism || annotations.source)}, &(features[?type=='CDS' && qualifiers.translation].{id:
+				join('|', [
+					(qualifiers.db_xref[?starts_with(@, 'GI')].['gi', split(':', @)[1]]),
+					(qualifiers.protein_id[*].['ref', @]),
+					(qualifiers.locus_tag[*].['locus', @]),
+					join('', [':', [location][?strand==`-1`] && 'c' || '', to_string(sum([location.start, `1`])), '..', to_string(location.end)])
+				][][]),
+				seq: qualifiers.translation[0],
+				description: (org && join('', [qualifiers.product[0], ' [', org, ']']) || qualifiers.product[0])}))
 
 See CONTRIBUTING.rst_ for information on contributing to this repo.
 
@@ -83,3 +97,5 @@ See CONTRIBUTING.rst_ for information on contributing to this repo.
 .. _SeqRecord: https://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html
 .. _constructor parameters: https://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html#__init__
 .. _JMESPath playground: https://glenveegee.github.io/jmespath-edit/
+.. _split(): https://github.com/jmespath/jmespath.py/issues/159
+.. _let(): https://github.com/jmespath/jmespath.site/pull/6
