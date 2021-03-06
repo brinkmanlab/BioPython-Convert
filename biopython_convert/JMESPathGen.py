@@ -5,11 +5,6 @@ import jmespath.exceptions
 import itertools
 import types
 
-from Bio.Seq import Seq
-from Bio.SeqFeature import SeqFeature
-
-from collections import deque
-
 # Register generator type in jmespath
 jmespath.functions.TYPES_MAP['generator'] = 'array'
 jmespath.functions.REVERSE_TYPES_MAP['array'] += ('generator',)
@@ -20,7 +15,15 @@ jmespath.functions.REVERSE_TYPES_MAP['string'] += ('Seq',)
 jmespath.functions.REVERSE_TYPES_MAP['Seq'] = ('Seq',)
 jmespath.functions.REVERSE_TYPES_MAP['SeqFeature'] = ('SeqFeature',)
 jmespath.functions.TYPES_MAP['ExactPosition'] = 'number'
+jmespath.functions.TYPES_MAP['BeforePosition'] = 'number'
+jmespath.functions.TYPES_MAP['BetweenPosition'] = 'number'
+jmespath.functions.TYPES_MAP['AfterPosition'] = 'number'
+jmespath.functions.TYPES_MAP['OneOfPosition'] = 'number'
 jmespath.functions.REVERSE_TYPES_MAP['number'] += ('ExactPosition',)
+jmespath.functions.REVERSE_TYPES_MAP['number'] += ('BeforePosition',)
+jmespath.functions.REVERSE_TYPES_MAP['number'] += ('BetweenPosition',)
+jmespath.functions.REVERSE_TYPES_MAP['number'] += ('AfterPosition',)
+jmespath.functions.REVERSE_TYPES_MAP['number'] += ('OneOfPosition',)
 
 # this implementation includes https://github.com/jmespath/jmespath.site/pull/6
 # and https://github.com/jmespath/jmespath.py/issues/159
