@@ -107,7 +107,7 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
             args[0] = self._generators.get(args[0], args[0])
         return super().visit(node, *args, **kwargs)
 
-    def visit_field(self, node, value, scope=None, **kwargs):
+    def visit_field(self, node, value, **kwargs):
         try:
             return value.get(node['value'])
         except AttributeError:
@@ -118,7 +118,9 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
                 # If the field is not defined in the current object, then fall back
                 # to checking in the scope chain, if there's any that has been
                 # created.
-                return scope.get(node['value'], None)
+                if 'scope' in kwargs:
+                    return kwargs['scope'].get(node['value'], None)
+                return None
 
     def visit_function_expression(self, node, value, **kwargs):
         resolved_args = []
@@ -177,7 +179,7 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
         if not isinstance(base, (list, types.GeneratorType, map, filter)):
             return None
         for element in base:
-            current = self.visit(node['children'][1], element)
+            current = self.visit(node['children'][1], element, **kwargs)
             if current is not None:
                 yield current
 
@@ -206,7 +208,7 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
         return super()._is_false(value)
 
     def visit_expref(self, node, value, **kwargs):
-        return _Expression(node['children'][0], self, value, **kwargs)
+        return _Expression(node['children'][0], self, value)
 
     def visit_subexpression(self, node, value, **kwargs):
         result = value
