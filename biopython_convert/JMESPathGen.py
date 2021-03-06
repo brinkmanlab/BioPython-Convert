@@ -5,6 +5,9 @@ import jmespath.exceptions
 import itertools
 import types
 
+from Bio.Seq import Seq
+from Bio.SeqFeature import SeqFeature
+
 from collections import deque
 
 # Register generator type in jmespath
@@ -14,6 +17,8 @@ jmespath.functions.REVERSE_TYPES_MAP['array'] += ('generator',)
 # Register biopython types in jmespath
 jmespath.functions.TYPES_MAP['Seq'] = 'string'
 jmespath.functions.REVERSE_TYPES_MAP['string'] += ('Seq',)
+jmespath.functions.REVERSE_TYPES_MAP['Seq'] = ('Seq',)
+jmespath.functions.REVERSE_TYPES_MAP['SeqFeature'] = ('SeqFeature',)
 jmespath.functions.TYPES_MAP['ExactPosition'] = 'number'
 jmespath.functions.REVERSE_TYPES_MAP['number'] += ('ExactPosition',)
 
@@ -67,6 +72,10 @@ class ExtendedFunctions(jmespath.functions.Functions):
     @jmespath.functions.signature({'types': ['string']}, {'types': ['string']})
     def _func_split(self, on, val):
         return val.split(on)
+
+    @jmespath.functions.signature({'types': ['Seq']}, {'types': ['SeqFeature']})
+    def _func_extract(self, seq, feature):
+        return feature.extract(seq)
 
 
 class _Expression(jmespath.visitor._Expression):

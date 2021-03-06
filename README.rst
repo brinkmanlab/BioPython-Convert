@@ -53,6 +53,8 @@ directly rather than trying to copy/paste the data.
 
 `split()`_ and `let()`_ functions are available in addition to the JMESPath standard functions
 
+`extract(Seq, SeqFeature)` is also made available to allow access to the `SeqFeature.extract()`_ function within the query
+
 Examples:
     Append a new record::
 
@@ -99,3 +101,4 @@ See CONTRIBUTING.rst_ for information on contributing to this repo.
 .. _JMESPath playground: https://glenveegee.github.io/jmespath-edit/
 .. _split(): https://github.com/jmespath/jmespath.py/issues/159
 .. _let(): https://github.com/jmespath/jmespath.site/pull/6
+.. _SeqFeature.extract(): https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.SeqFeature.extract

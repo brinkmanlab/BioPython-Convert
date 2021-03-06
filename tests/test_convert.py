@@ -109,6 +109,11 @@ class TestConvert(TestCase):
         convert(self.input_path, self.input_type, output_path, 'json', jpath='[*].{id: split(\'.\', id), type: annotations.molecule_type}')
         self.compare_files(Path.joinpath(self.output_path, 'json_jpath_split'), output_path)
 
+    def test_json_jpath_extract(self):
+        output_path = Path(self.workdir.name, 'json_jpath_extract')
+        convert(self.input_path, self.input_type, output_path, 'json', jpath="[0].let({seq:seq}, &features[?type=='gene'].extract(seq, @))") # "[0].let({seq: seq}, &features[?type=='gene']|[0].{id: id, description: 'extracted sequence', seq: seq[::location]})")
+        self.compare_files(Path.joinpath(self.output_path, 'json_jpath_extract'), output_path)
+
     def test_json_jpath_let(self):
         output_path = Path(self.workdir.name, 'json_jpath_let')
         convert(self.input_path, self.input_type, output_path, 'json', jpath='[*].let({type: annotations.molecule_type}, &{id: id, type: type})')
@@ -144,3 +149,21 @@ seq: qualifiers.translation[0],
 description: (org && join('', [qualifiers.product[0], ' [', org, ']']) || qualifiers.product[0])}))
         """)
         self.compare_files(Path.joinpath(self.output_path, 'faa'), output_path)
+
+    def test_creation2(self):
+        """
+        Test handling JMESPath creating new SeqRecords
+        """
+        output_path = Path(self.workdir.name, 'ffn')
+        convert(self.input_path, self.input_type, output_path, 'fasta', jpath="""
+[0].let({desc: description, seq: seq}, &features[?type=='gene'].{id:
+join('|', [
+  (qualifiers.db_xref[?starts_with(@, 'GI')].['gi', split(':', @)[1]]),
+  (qualifiers.protein_id[*].['ref', @]),
+  (qualifiers.locus_tag[*].['locus', @]),
+  join('', [':', [location][?strand==`-1`] && 'c' || '', to_string(sum([location.start, `1`])), '..', to_string(location.end)])
+][][]),
+seq: extract(seq, @),
+description: desc})
+        """)
+        self.compare_files(Path.joinpath(self.output_path, 'ffn'), output_path)
