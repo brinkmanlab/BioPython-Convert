@@ -1,11 +1,22 @@
 - annotations:
     accessions: [NC_008563]
-    comment: "REFSEQ INFORMATION: The reference sequence was derived from\nCP000468.\n\
-      Annotation was added by the NCBI Prokaryotic Genome Annotation\nPipeline (released\
-      \ 2013). Information about the Pipeline can be\nfound here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/\n\
-      Growth conditions for DNA isolation: 37C, 12 hr, LB broth. Strain\navailable\
-      \ upon request from authors Lisa Nolan or Tim Johnson,\nemail to: timjohns@iastate.edu.\n\
-      COMPLETENESS: full length."
+    comment: 'REFSEQ INFORMATION: The reference sequence was derived from
+
+      CP000468.
+
+      Annotation was added by the NCBI Prokaryotic Genome Annotation
+
+      Pipeline (released 2013). Information about the Pipeline can be
+
+      found here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/
+
+      Growth conditions for DNA isolation: 37C, 12 hr, LB broth. Strain
+
+      available upon request from authors Lisa Nolan or Tim Johnson,
+
+      email to: timjohns@iastate.edu.
+
+      COMPLETENESS: full length.'
     contig: join(CP000468.1:1..5082025)
     data_file_division: CON
     date: 22-FEB-2017
@@ -47,7 +58,7 @@
     sequence_version: 1
     source: Escherichia coli APEC O1
     structured_comment:
-      Genome-Annotation-Data: {Annotation Date: 02/22/2017 01:36:07, Annotation Method: Best-placed
+      Genome-Annotation-Data: {Annotation Date: '02/22/2017 01:36:07', Annotation Method: Best-placed
           reference protein set; GeneMarkS+, Annotation Pipeline: NCBI Prokaryotic
           Genome Annotation Pipeline, Annotation Provider: NCBI, Annotation Software revision: '4.1',
         CDS (coding): '5,382', CDS (total): '5,648', CRISPR Arrays: 2, Features Annotated: Gene;
@@ -63,10 +74,17 @@
   id: NC_008563.1
 - annotations:
     accessions: [NC_009837]
-    comment: "REFSEQ INFORMATION: The reference sequence was derived from\nDQ381420.\n\
-      Annotation was added by the NCBI Prokaryotic Genome Annotation\nPipeline (released\
-      \ 2013). Information about the Pipeline can be\nfound here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/\n\
-      COMPLETENESS: full length."
+    comment: 'REFSEQ INFORMATION: The reference sequence was derived from
+
+      DQ381420.
+
+      Annotation was added by the NCBI Prokaryotic Genome Annotation
+
+      Pipeline (released 2013). Information about the Pipeline can be
+
+      found here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/
+
+      COMPLETENESS: full length.'
     contig: join(DQ381420.1:1..174241)
     data_file_division: CON
     date: 22-FEB-2017
@@ -97,7 +115,7 @@
     sequence_version: 1
     source: Escherichia coli APEC O1
     structured_comment:
-      Genome-Annotation-Data: {Annotation Date: 02/22/2017 01:36:07, Annotation Method: Best-placed
+      Genome-Annotation-Data: {Annotation Date: '02/22/2017 01:36:07', Annotation Method: Best-placed
           reference protein set; GeneMarkS+, Annotation Pipeline: NCBI Prokaryotic
           Genome Annotation Pipeline, Annotation Provider: NCBI, Annotation Software revision: '4.1',
         CDS (coding): '5,382', CDS (total): '5,648', CRISPR Arrays: 2, Features Annotated: Gene;
@@ -113,10 +131,17 @@
   id: NC_009837.1
 - annotations:
     accessions: [NC_009838]
-    comment: "REFSEQ INFORMATION: The reference sequence was derived from\nDQ517526.\n\
-      Annotation was added by the NCBI Prokaryotic Genome Annotation\nPipeline (released\
-      \ 2013). Information about the Pipeline can be\nfound here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/\n\
-      COMPLETENESS: full length."
+    comment: 'REFSEQ INFORMATION: The reference sequence was derived from
+
+      DQ517526.
+
+      Annotation was added by the NCBI Prokaryotic Genome Annotation
+
+      Pipeline (released 2013). Information about the Pipeline can be
+
+      found here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/
+
+      COMPLETENESS: full length.'
     contig: join(DQ517526.1:1..241387)
     data_file_division: CON
     date: 22-FEB-2017
@@ -148,7 +173,7 @@
     sequence_version: 1
     source: Escherichia coli APEC O1
     structured_comment:
-      Genome-Annotation-Data: {Annotation Date: 02/22/2017 01:36:07, Annotation Method: Best-placed
+      Genome-Annotation-Data: {Annotation Date: '02/22/2017 01:36:07', Annotation Method: Best-placed
           reference protein set; GeneMarkS+, Annotation Pipeline: NCBI Prokaryotic
           Genome Annotation Pipeline, Annotation Provider: NCBI, Annotation Software revision: '4.1',
         CDS (coding): '5,382', CDS (total): '5,648', CRISPR Arrays: 2, Features Annotated: Gene;

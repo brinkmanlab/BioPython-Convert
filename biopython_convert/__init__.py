@@ -280,6 +280,9 @@ def to_dicts(v):
             pass
         return v
 
+    if isinstance(v, Seq.Seq):
+        return str(v)
+
     if isinstance(v, (types.GeneratorType, map, filter, tuple)):
         v = list(v)
 

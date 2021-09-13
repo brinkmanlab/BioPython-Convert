@@ -1,4 +1,4 @@
-biopython>=1.78
+biopython>=1.79
 gffutils>=0.10.1
 jmespath>=0.10.0
 ruamel.yaml>=	0.16.12
