@@ -10,6 +10,7 @@ from biopython_convert import convert
 
 class TestConvert(TestCase):
     input_path = Path('test-data/has_plasmids.gbff')
+    noseq_path = Path('test-data/no_seq.gbff')
     output_path = Path('test-data/outputs/')
     input_type = 'genbank'
     convert_type = 'embl'
@@ -50,6 +51,11 @@ class TestConvert(TestCase):
         output_path = Path(self.workdir.name, 'convert')
         convert(self.input_path, self.input_type, output_path, self.convert_type)
         self.compare_files(Path.joinpath(self.output_path, 'convert'), output_path)
+
+    def test_noseq(self):
+        output_path = Path(self.workdir.name, 'no_seq')
+        convert(self.noseq_path, self.input_type, output_path, 'fasta')
+        self.compare_files(Path.joinpath(self.output_path, 'no_seq'), output_path)
 
     def test_filter(self):
         output_path = Path(self.workdir.name, 'filter')

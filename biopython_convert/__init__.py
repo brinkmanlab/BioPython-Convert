@@ -160,7 +160,6 @@ def _to_SeqRecords(records):
 
     return map(lambda r: _to_SeqRecord(r) if isinstance(r, dict) else r, records)
 
-
 def get_records(input_handle, input_type: str, jpath: str = '', xform: Callable = _to_SeqRecords):
     """
     Read in records and apply optional jmespath
@@ -369,6 +368,8 @@ def convert(input_path: pathlib.Path, input_type: str, output_path: pathlib.Path
                             raise
                         binary = 'b'
                         continue
+                    except Seq.UndefinedSequenceError:
+                        path.unlink(True)
                     break
         else:
             while True:
@@ -387,5 +388,7 @@ def convert(input_path: pathlib.Path, input_type: str, output_path: pathlib.Path
                         raise
                     binary = 'b'
                     continue
+                except Seq.UndefinedSequenceError:
+                    pass
                 break
 
