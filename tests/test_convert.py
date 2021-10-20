@@ -144,7 +144,7 @@ class TestConvert(TestCase):
         """
         output_path = Path(self.workdir.name, 'faa')
         convert(self.input_path, self.input_type, output_path, 'fasta', jpath="""
-[0].let({org: (annotations.organism || annotations.source)}, &(features[?type=='CDS' && qualifiers.translation].{id:
+[0].let({organism: (annotations.organism || annotations.source)}, &features[?type=='CDS' && qualifiers.translation].{id:
 join('|', [
   (qualifiers.db_xref[?starts_with(@, 'GI')].['gi', split(':', @)[1]]),
   (qualifiers.protein_id[*].['ref', @]),
@@ -152,7 +152,7 @@ join('|', [
   join('', [':', [location][?strand==`-1`] && 'c' || '', to_string(sum([location.start, `1`])), '..', to_string(location.end)])
 ][][]),
 seq: qualifiers.translation[0],
-description: (org && join('', [qualifiers.product[0], ' [', org, ']']) || qualifiers.product[0])}))
+description: (organism && join('', [qualifiers.product[0] || qualifiers.protein_id[0], ' [', organism, ']']) || qualifiers.product[0])})
         """)
         self.compare_files(Path.joinpath(self.output_path, 'faa'), output_path)
 
