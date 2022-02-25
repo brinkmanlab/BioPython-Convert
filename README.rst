@@ -80,17 +80,17 @@ Examples:
 
         [0].[join(' - 1..', [description, to_string(length(seq))]), join(' ', [to_string(length(features[?type=='CDS' && qualifiers.translation])), 'proteins']), join(`"\t"`, ['Location', 'Strand', 'Length', 'PID', 'Gene', 'Synonym', 'Code', 'COG', 'Product']), (features[?type=='CDS' && qualifiers.translation].[join('..', [to_string(sum([location.start, `1`])), to_string(location.end)]), [location.strand][?@==`1`] && '+' || '-', length(qualifiers.translation[0]), (qualifiers.db_xref[?starts_with(@, 'GI')].split(':', @)[1])[0] || '-', qualifiers.gene[0] || '-', qualifiers.locus_tag[0] || '-', '-', '-', qualifiers.product[0] ] | [*].join(`"\t"`, [*].to_string(@)) )] | []
 
-		Convert dataset to faa format using fasta output::
+    Convert dataset to faa format using fasta output::
 
-				[0].let({org: (annotations.organism || annotations.source)}, &(features[?type=='CDS' && qualifiers.translation].{id:
-				join('|', [
-					(qualifiers.db_xref[?starts_with(@, 'GI')].['gi', split(':', @)[1]]),
-					(qualifiers.protein_id[*].['ref', @]),
-					(qualifiers.locus_tag[*].['locus', @]),
-					join('', [':', [location][?strand==`-1`] && 'c' || '', to_string(sum([location.start, `1`])), '..', to_string(location.end)])
-				][][]),
-				seq: qualifiers.translation[0],
-				description: (org && join('', [qualifiers.product[0], ' [', org, ']']) || qualifiers.product[0])}))
+	[0].let({org: (annotations.organism || annotations.source)}, &(features[?type=='CDS' && qualifiers.translation].{id:
+	join('|', [
+		(qualifiers.db_xref[?starts_with(@, 'GI')].['gi', split(':', @)[1]]),
+		(qualifiers.protein_id[*].['ref', @]),
+		(qualifiers.locus_tag[*].['locus', @]),
+		join('', [':', [location][?strand==`-1`] && 'c' || '', to_string(sum([location.start, `1`])), '..', to_string(location.end)])
+	][][]),
+	seq: qualifiers.translation[0],
+	description: (org && join('', [qualifiers.product[0], ' [', org, ']']) || qualifiers.product[0])}))
 
 See CONTRIBUTING.rst_ for information on contributing to this repo.
 
