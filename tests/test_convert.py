@@ -173,3 +173,11 @@ seq: extract(seq, @),
 description: desc})
         """)
         self.compare_files(Path.joinpath(self.output_path, 'ffn'), output_path)
+
+    def test_jpath_slice(self):
+        """
+        Test slicing a SeqRecord
+        """
+        output_path = Path(self.workdir.name, 'jpath_slice')
+        convert(self.input_path, self.input_type, output_path, 'genbank', jpath='[[0][200:3000]]')
+        self.compare_files(Path.joinpath(self.output_path, 'jpath_slice'), output_path)

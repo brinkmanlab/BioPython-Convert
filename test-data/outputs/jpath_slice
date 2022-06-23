@@ -1,0 +1,88 @@
+LOCUS       NC_008563               2800 bp    DNA              UNK 01-JAN-1980
+DEFINITION  Escherichia coli APEC O1, complete genome.
+ACCESSION   NC_008563
+VERSION     NC_008563.1
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            117..2579
+                     /locus_tag="APECO1_RS00010"
+                     /old_locus_tag="APECO1_1976"
+     CDS             117..2579
+                     /locus_tag="APECO1_RS00010"
+                     /old_locus_tag="APECO1_1976"
+                     /inference="COORDINATES: similar to AA
+                     sequence:RefSeq:WP_005124053.1"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: Protein Homology."
+                     /codon_start=1
+                     /transl_table=11
+                     /product="bifunctional aspartokinase I/homoserine
+                     dehydrogenase I"
+                     /protein_id="WP_001264707.1"
+                     /translation="MRVLKFGGTSVANAERFLRVADILESNARQGQVATVLSAPAKITN
+                     HLVAMIEKTISGQDALPNISDAERIFAELLTGLAAAQPGFPLAQLKTFVDQEFAQIKHV
+                     LHGISLLGQCPDSINAALICRGEKMSIAIMAGVLEARGHNVTVIDPVEKLLAVGHYLES
+                     TVDIAESTRRIAASRIPADHMVLMAGFTAGNEKGELVVLGRNGSDYSAAVLAACLRADC
+                     CEIWTDVDGVYTCDPRQVPDARLLKSMSYQEAMELSYFGAKVLHPRTITPIAQFQIPCL
+                     IKNTGNPQAPGTLIGASRDEDELPVKGISNLNNMAMFSVSGPGMKGMVGMAARVFAAMS
+                     RARISVVLITQSSSEYSISFCVPQSDCVRAERAMQEEFYLELKEGLLEPLAVTERLAII
+                     SVVGDGMRTLRGISAKFFAALARANINIVAIAQGSSERSISVVVNNDDATTGVRVTHQM
+                     LFNTDQVIEVFVIGVGGVGGALLEQLKRQQSWLKNKHIDLRVCGVANSKALLTNVHGLN
+                     LENWQEELAQAKEPFNLGRLIRLVKEYHLLNPVIVDCTSSQAVADQYADFLREGFHVVT
+                     PNKKANTSSMDYYHQLRYAAEKSRRKFLYDTNVGAGLPVIENLQNLLNAGDELMKFSGI
+                     LSGSLSYIFGKLDEGMSFSEATTLAREMGYTEPDPRDDLSGMDVARKLLILARETGREL
+                     ELADIEIEPVLPAEFNAEGDVAAFMANLSQLDDLFAARVAKARDEGKVLRYVGNIDEDG
+                     VCRVKIAEVDGNDPLFKVKNGENALAFYSHYYQPLPLVLRGYGAGNDVTAAGVFADLLR
+                     TLSWKLGV"
+ORIGIN
+        1 accatcacca ttaccacagg taacggtgcg ggctgacgcg tacaggaaac acagaaaaaa
+       61 gcccgcacct gacagtgcgg gctttttttt cgaccaaagg taacgaggta acaaccatgc
+      121 gagtgttgaa gttcggcggt acatcagtgg caaatgcaga acgttttctg cgggttgccg
+      181 atattctgga aagcaatgcc aggcaggggc aggtggcgac cgtcctctct gcccccgcca
+      241 aaattaccaa ccatctggta gcgatgattg aaaaaaccat tagcggccaa gatgctttac
+      301 ccaatatcag cgatgccgaa cgtatttttg ccgaacttct gacgggactc gccgccgccc
+      361 agccgggatt tccgctggca caattgaaaa ctttcgtcga ccaggaattt gcccaaataa
+      421 aacatgtcct gcatggcatt agtttgttgg ggcagtgccc ggatagcatc aacgctgcgc
+      481 tgatttgccg tggcgagaaa atgtcgatcg ccattatggc cggcgtgtta gaagcgcgtg
+      541 gtcacaacgt taccgttatc gatccggtcg aaaaactgct tgcagtgggg cattacctcg
+      601 aatctaccgt tgatattgct gagtccaccc gccgtattgc ggcaagccgc attccggctg
+      661 accacatggt gctgatggct ggtttcactg ccggtaatga aaaaggcgag ctggtggttc
+      721 tgggacgcaa cggttccgac tactccgctg cggtgctggc ggcctgttta cgcgccgatt
+      781 gttgcgagat ctggacggat gttgacggtg tttatacctg cgatccgcgt caggtgcccg
+      841 atgcgaggtt gttgaagtcg atgtcctatc aggaagcgat ggagctttct tacttcggcg
+      901 ctaaagttct tcacccccgc accatcaccc ccatcgccca gtttcagatc ccttgcctga
+      961 ttaaaaatac cggaaatcct caagctccag gtacgctcat tggtgccagc cgtgatgaag
+     1021 acgaattacc ggtcaagggc atttccaatc tgaataacat ggcaatgttc agcgtttccg
+     1081 gcccggggat gaaagggatg gttggcatgg cggcgcgcgt ctttgcagcg atgtcacgcg
+     1141 cccgtatttc cgtggtgctg attacgcaat catcttccga atacagtatc agtttctgcg
+     1201 ttccgcaaag cgactgtgtg cgagctgaac gggcaatgca ggaagagttc tacctggaac
+     1261 tgaaagaagg cttactggag ccgttggcgg tgacggaacg gctggccatt atctcggtgg
+     1321 taggtgatgg tatgcgcacc ttacgtggga tctcggcgaa attctttgcc gcgctggccc
+     1381 gcgccaatat caacattgtc gccattgctc agggatcttc tgaacgctca atctctgtcg
+     1441 tggtcaataa cgatgatgcg accactggcg tgcgcgttac tcatcagatg ctgttcaata
+     1501 ccgatcaggt tatcgaagtg tttgtgattg gcgtcggtgg cgttggcggt gcgctgctgg
+     1561 agcaactgaa gcgtcagcaa agctggttga agaataaaca tatcgactta cgtgtctgcg
+     1621 gtgttgctaa ctcgaaggca ctgctcacca atgtacatgg ccttaatctg gaaaactggc
+     1681 aggaagaact ggcgcaagcc aaagagccgt ttaatctcgg gcgcttaatt cgcctcgtga
+     1741 aagaatatca tctgctgaac ccggtcattg ttgactgtac ttccagccag gcagtggcgg
+     1801 atcaatatgc cgacttcctg cgcgaaggtt tccacgttgt tacgccgaac aaaaaggcca
+     1861 acacctcgtc gatggattac taccatcagt tgcgttatgc ggcggaaaaa tcgcggcgta
+     1921 aattcctcta tgacaccaac gttggggctg gattaccggt tatcgagaac ctgcaaaatc
+     1981 tgctcaatgc tggtgatgaa ttgatgaagt tctccggcat tctttcaggt tcgctttctt
+     2041 atatcttcgg caagttagac gaaggcatga gtttctccga ggcgaccaca ctggcgcggg
+     2101 aaatgggtta taccgaaccg gacccgcgag atgatctttc tggtatggat gtggcgcgta
+     2161 agctattgat tctcgctcgt gaaacgggac gtgaactgga gctggcggat attgaaattg
+     2221 aacctgtgct gcccgcagag tttaacgccg agggtgatgt cgccgctttt atggcgaatc
+     2281 tgtcacagct cgacgatctc tttgccgcgc gtgtggcgaa ggcccgtgat gaaggaaaag
+     2341 ttttgcgcta tgttggcaat attgatgaag atggcgtctg ccgcgtgaag attgccgaag
+     2401 tggatggtaa tgatccgctg ttcaaagtga aaaatggcga aaacgccctg gccttctata
+     2461 gccactatta tcagccgctg ccgttggtac tgcgcggata tggtgcgggc aatgacgtta
+     2521 cagctgccgg tgtctttgct gatctgctac gtaccctctc atggaagtta ggagtctgac
+     2581 atggttaaag tttatgcccc ggcttccagt gccaatatga gcgtcgggtt tgatgtgctc
+     2641 ggggcggcgg tgacacctgt tgatggtgca ttgctcggag atgtagtcac ggttgaggcg
+     2701 gcagagacat tcagtctcaa caacctcgga cgctttgccg ataagctgcc gtcagagcca
+     2761 cgggaaaata tcgtttatca gtgctgggag cgtttttgcc
+//

@@ -27,6 +27,8 @@ SeqIO_types = ['abi', 'abi-trim', 'ace', 'cif-atom', 'cif-seqres', 'clustal', 'e
 stat_annotations = ['molecule_type', 'topology', 'data_file_division', 'date', 'accessions', 'sequence_version', 'gi',
                     'keywords', 'source', 'organism']
 
+JMESPathGenOptions = JMESPathGen.Options(custom_functions=JMESPathGen.ExtendedFunctions(), custom_slice_types=(SeqIO.SeqRecord,))
+
 usage = """\
 Use: biopython.convert [-s] [-v] [-i] [-q JMESPath] input_file input_type output_file output_type
 \t-s Split records into seperate files
@@ -192,7 +194,7 @@ def get_records(input_handle, input_type: str, jpath: str = '', xform: Callable 
 
     # Wrap input in JMESPath selector if provided
     if jpath:
-        input_records = JMESPathGen.search(jpath, gentype(input_records))
+        input_records = JMESPathGen.search(jpath, gentype(input_records), JMESPathGenOptions)
 
     # Apply xform to both entire return value
     input_records = xform(input_records)

@@ -29,6 +29,12 @@ jmespath.functions.REVERSE_TYPES_MAP['number'] += ('OneOfPosition',)
 # and https://github.com/jmespath/jmespath.py/issues/159
 
 
+class Options(jmespath.Options):
+    def __init__(self, dict_cls=None, custom_functions=None, custom_slice_types=None):
+        super().__init__(dict_cls, custom_functions)
+        self.custom_slice_types = custom_slice_types
+
+
 def compile(expression):
     return Parser().parse(expression)
 
@@ -178,6 +184,8 @@ class TreeInterpreterGenerator(jmespath.visitor.TreeInterpreter):
         return super().visit_index(node, value)
 
     def visit_slice(self, node, value, **kwargs):
+        if self._options.custom_slice_types is not None and isinstance(value, self._options.custom_slice_types):
+            return value[slice(*node['children'])]
         return itertools.islice(value, *node['children'])
 
     def visit_multi_select_list(self, node, value, **kwargs):
